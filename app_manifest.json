@@ -1,0 +1,12 @@
+{
+  "SchemaVersion": 1,
+  "Name": "AzureSphereDemo",
+  "ComponentId": "1bdc180f-f2ab-47c3-a51b-5d7d3056aee2",
+  "EntryPoint": "/bin/app",
+  "CmdArgs": [],
+  "Capabilities": {
+    "Gpio": [ "$SAMPLE_RGBLED_RED", "$SAMPLE_RGBLED_GREEN", "$SAMPLE_RGBLED_BLUE" ],
+    "AllowedApplicationConnections": []
+  },
+  "ApplicationType": "Default"
+}

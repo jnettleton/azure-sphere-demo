@@ -1,0 +1,56 @@
+{
+    "Metadata": {
+        "Type": "Azure Sphere Hardware Definition",
+        "Version": 1
+    },
+    "Description":
+    {
+        "Name": "Sample hardware abstraction for Avnet MT3620 SK Rev2",
+        "MainCoreHeaderFileTopContent": [
+            "// This file defines the mapping from the Avnet MT3620 Starter Kit (SK) to the",
+            "// 'sample hardware' abstraction used by the samples at https://github.com/Azure/azure-sphere-samples.",
+            "// Some peripherals are on-board on the Avnet MT3620 SK, while other peripherals must be attached externally if needed.",
+            "// See https://aka.ms/AzureSphereHardwareDefinitions for more information on how to use hardware abstractions,",
+            "// to enable apps to work across multiple hardware variants."
+        ]
+    },
+
+    "Imports" : [ {"Path": "avnet_mt3620_sk_rev2.json"} ],
+    "Peripherals": [
+        {"Name": "SAMPLE_BUTTON_1", "Type": "Gpio", "Mapping": "AVNET_MT3620_SK_USER_BUTTON_A", "Comment": "MT3620 SK: User Button A."},
+        {"Name": "SAMPLE_BUTTON_2", "Type": "Gpio", "Mapping": "AVNET_MT3620_SK_USER_BUTTON_B", "Comment": "MT3620 SK: User Button B."},
+
+        {"Name": "SAMPLE_RGBLED_RED", "Type": "Gpio", "Mapping": "AVNET_MT3620_SK_USER_LED_RED", "Comment": "MT3620 SK: User LED RED Channel."},
+        {"Name": "SAMPLE_RGBLED_GREEN", "Type": "Gpio", "Mapping": "AVNET_MT3620_SK_USER_LED_GREEN", "Comment": "MT3620 SK: User LED GREEN Channel."},
+        {"Name": "SAMPLE_RGBLED_BLUE", "Type": "Gpio", "Mapping": "AVNET_MT3620_SK_USER_LED_BLUE", "Comment": "MT3620 SK: User LED BLUE Channel."},
+
+        // accelerometer
+        {"Name": "SAMPLE_LSM6DSO_I2C", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_ISU2_I2C", "Comment": "MT3620 SK: LSM6DSO accelerometer."},
+        {"Name": "SAMPLE_LSM6DSO_SCL", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_GPIO32", "Comment": "MT3620 SK: LSM6DSO accelerometer."},
+        {"Name": "SAMPLE_LSM6DSO_SDA", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_GPIO33", "Comment": "MT3620 SK: LSM6DSO accelerometer."},
+
+        {"Name": "SAMPLE_LPS22HH_I2C", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_ISU2_I2C", "Comment": "MT3620 SK: LPS22HH pressure sensor."},
+        {"Name": "SAMPLE_LPS22HH_SCL", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_GPIO32", "Comment": "MT3620 SK: LPS22HH pressure sensor."},
+        {"Name": "SAMPLE_LPS22HH_SDA", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_GPIO33", "Comment": "MT3620 SK: LPS22HH pressure sensor."},
+
+        {"Name": "SAMPLE_AMBIENT_LIGHT_ADC", "Type": "Adc", "Mapping": "AVNET_MT3620_ADC_CONTROLLER0", "Comment": "MT3620 SK: Ambient light sensor."},
+        {"Name": "SAMPLE_AMBIENT_LIGHT_ADC_CHANNEL", "Type": "int", "Mapping": "MT3620_ADC_CHANNEL0", "Comment": "Channel 0 using ambient light sensor."},
+
+        {"Name": "SAMPLE_OLED_I2C", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_ISU2_I2C", "Comment": "MT3620 SK: OLED I2C."},
+        {"Name": "SAMPLE_OLED_SCL", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_GPIO37", "Comment": "MT3620 SK: OLED SLC."},
+        {"Name": "SAMPLE_OLED_SDA", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_GPIO38", "Comment": "MT3620 SK: OLED SDA."},
+
+        {"Name": "SAMPLE_CLICK1_I2C", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_ISU2_I2C", "Comment": "MT3620 SK: CLICK 1 ISU2."},
+        {"Name": "SAMPLE_CLICK1_SCL", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_GPIO37", "Comment": "MT3620 SK: CLICK 1 SLC."},
+        {"Name": "SAMPLE_CLICK1_SDA", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_GPIO38", "Comment": "MT3620 SK: CLICK 1 SDA."},
+
+        {"Name": "SAMPLE_CLICK2_I2C", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_ISU2_I2C", "Comment": "MT3620 SK: CLICK 2 ISU2."},
+        {"Name": "SAMPLE_CLICK2_SCL", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_GPIO37", "Comment": "MT3620 SK: CLICK 2 SLC."},
+        {"Name": "SAMPLE_CLICK2_SDA", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_GPIO38", "Comment": "MT3620 SK: CLICK 2 SDA."}
+
+        //{"Name": "SAMPLE_PMOD_UART", "Type": "Uart", "Mapping": "AVNET_MT3620_SK_ISU1_UART", "Comment": "MT3620 SK: Connect PMOD to un-populated PMOD connector"},        
+        //{"Name": "SAMPLE_PMOD_PIN7", "Type": "Gpio", "Mapping": "AVNET_MT3620_SK_GPIO39", "Comment": "Pin7 on the PMOD connector"},
+        //{"Name": "SAMPLE_PMOD_PIN8", "Type": "Gpio", "Mapping": "AVNET_MT3620_SK_GPIO35", "Comment": "Pin8 on the PMOD connector"},
+        //{"Name": "SAMPLE_PMOD_PIN9", "Type": "Gpio", "Mapping": "AVNET_MT3620_SK_GPIO1", "Comment": "Pin9 on the PMOD connector"},
+    ]
+}
