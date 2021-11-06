@@ -29,15 +29,12 @@ SOFTWARE.
 #ifndef OLED_H
 #define OLED_H
 
-
-
 #include <stdio.h>
 #include <stdint.h>
 #include "sd1306.h"
 #include "applibs_versions.h"
 #include <applibs/wificonfig.h>
 //#include "deviceTwin.h"
-
 
 #define OLED_NUM_SCREEN 7
 
@@ -107,7 +104,6 @@ extern void oled_i2c_bus_status(uint8_t lsmod_status);
 extern void update_oled(void);
 
 extern void oled_draw_logo(void);
-
 
 
 void update_network(void);

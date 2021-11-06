@@ -5,7 +5,14 @@
   "EntryPoint": "/bin/app",
   "CmdArgs": [],
   "Capabilities": {
-    "Gpio": [ "$SAMPLE_RGBLED_RED", "$SAMPLE_RGBLED_GREEN", "$SAMPLE_RGBLED_BLUE" ],
+    "Gpio": [
+      "$SAMPLE_RGBLED_RED",
+      "$SAMPLE_RGBLED_GREEN",
+      "$SAMPLE_RGBLED_BLUE",
+      "$SAMPLE_BUTTON_1",
+      "$SAMPLE_BUTTON_2"
+    ],
+    "I2cMaster": [ "$SAMPLE_LSM6DSO_I2C" ],
     "AllowedApplicationConnections": []
   },
   "ApplicationType": "Default"

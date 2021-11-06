@@ -25,26 +25,26 @@
         {"Name": "SAMPLE_RGBLED_BLUE", "Type": "Gpio", "Mapping": "AVNET_MT3620_SK_USER_LED_BLUE", "Comment": "MT3620 SK: User LED BLUE Channel."},
 
         // accelerometer
-        {"Name": "SAMPLE_LSM6DSO_I2C", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_ISU2_I2C", "Comment": "MT3620 SK: LSM6DSO accelerometer."},
+        {"Name": "SAMPLE_LSM6DSO_I2C", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_ISU2_I2C", "Comment": "MT3620 SK: LSM6DSO accelerometer."},
         {"Name": "SAMPLE_LSM6DSO_SCL", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_GPIO32", "Comment": "MT3620 SK: LSM6DSO accelerometer."},
         {"Name": "SAMPLE_LSM6DSO_SDA", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_GPIO33", "Comment": "MT3620 SK: LSM6DSO accelerometer."},
 
-        {"Name": "SAMPLE_LPS22HH_I2C", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_ISU2_I2C", "Comment": "MT3620 SK: LPS22HH pressure sensor."},
+        {"Name": "SAMPLE_LPS22HH_I2C", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_ISU2_I2C", "Comment": "MT3620 SK: LPS22HH pressure sensor."},
         {"Name": "SAMPLE_LPS22HH_SCL", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_GPIO32", "Comment": "MT3620 SK: LPS22HH pressure sensor."},
         {"Name": "SAMPLE_LPS22HH_SDA", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_GPIO33", "Comment": "MT3620 SK: LPS22HH pressure sensor."},
 
-        {"Name": "SAMPLE_AMBIENT_LIGHT_ADC", "Type": "Adc", "Mapping": "AVNET_MT3620_ADC_CONTROLLER0", "Comment": "MT3620 SK: Ambient light sensor."},
-        {"Name": "SAMPLE_AMBIENT_LIGHT_ADC_CHANNEL", "Type": "int", "Mapping": "MT3620_ADC_CHANNEL0", "Comment": "Channel 0 using ambient light sensor."},
+        {"Name": "SAMPLE_AMBIENT_LIGHT_ADC", "Type": "Adc", "Mapping": "AVNET_MT3620_SK_ADC_CONTROLLER0", "Comment": "MT3620 SK: Ambient light sensor."},
+        {"Name": "SAMPLE_AMBIENT_LIGHT_ADC_CHANNEL", "Type": "int", "Mapping": "MT3620_SK_ADC_CHANNEL0", "Comment": "Channel 0 using ambient light sensor."},
 
-        {"Name": "SAMPLE_OLED_I2C", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_ISU2_I2C", "Comment": "MT3620 SK: OLED I2C."},
+        {"Name": "SAMPLE_OLED_I2C", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_ISU2_I2C", "Comment": "MT3620 SK: OLED I2C."},
         {"Name": "SAMPLE_OLED_SCL", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_GPIO37", "Comment": "MT3620 SK: OLED SLC."},
         {"Name": "SAMPLE_OLED_SDA", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_GPIO38", "Comment": "MT3620 SK: OLED SDA."},
 
-        {"Name": "SAMPLE_CLICK1_I2C", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_ISU2_I2C", "Comment": "MT3620 SK: CLICK 1 ISU2."},
+        {"Name": "SAMPLE_CLICK1_I2C", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_ISU2_I2C", "Comment": "MT3620 SK: CLICK 1 ISU2."},
         {"Name": "SAMPLE_CLICK1_SCL", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_GPIO37", "Comment": "MT3620 SK: CLICK 1 SLC."},
         {"Name": "SAMPLE_CLICK1_SDA", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_GPIO38", "Comment": "MT3620 SK: CLICK 1 SDA."},
 
-        {"Name": "SAMPLE_CLICK2_I2C", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_ISU2_I2C", "Comment": "MT3620 SK: CLICK 2 ISU2."},
+        {"Name": "SAMPLE_CLICK2_I2C", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_ISU2_I2C", "Comment": "MT3620 SK: CLICK 2 ISU2."},
         {"Name": "SAMPLE_CLICK2_SCL", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_GPIO37", "Comment": "MT3620 SK: CLICK 2 SLC."},
         {"Name": "SAMPLE_CLICK2_SDA", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_GPIO38", "Comment": "MT3620 SK: CLICK 2 SDA."}
 
