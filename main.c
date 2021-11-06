@@ -11,7 +11,7 @@
 #include <applibs/gpio.h>
 #include <applibs/i2c.h>
 
-#include "SSD1306.h"
+//#include "SSD1306.h"
 
 // The following #include imports a "template appliance" definition. This app comes with multiple
 // implementations of the template appliance, each in a separate directory, which allow the code
