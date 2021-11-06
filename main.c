@@ -430,7 +430,6 @@ static ExitCode InitPeripheralsAndHandlers(void)
 
 #ifdef USE_IOT_CONNECT
     if (IoTConnectInit() != ExitCode_Success) {
-
         return ExitCode_Init_IoTCTimer;
     }
 #endif
@@ -648,7 +647,7 @@ int main(void)
 	// Main loop
 	while (exitCode == ExitCode_Success)
     {
-        GPIO_SetValue(fdRed, GPIO_Value_Low);
+        //GPIO_SetValue(fdRed, GPIO_Value_Low);
 
     	EventLoop_Run_Result result = EventLoop_Run(eventLoop, -1, true);
         // Continue if interrupted by signal, e.g. due to breakpoint being set.
@@ -656,7 +655,7 @@ int main(void)
             exitCode = ExitCode_Main_EventLoopFail;
         }
 
-    	GPIO_SetValue(fdRed, GPIO_Value_High);
+    	//GPIO_SetValue(fdRed, GPIO_Value_High);
     }
 
     ClosePeripheralsAndHandlers();
