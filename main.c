@@ -607,7 +607,10 @@ static void ReadWifiConfig(bool outputDebug)
 int main(void)
 {
     Log_Debug("\nVisit https://github.com/Azure/azure-sphere-samples for extensible samples to use as a starting point for full applications.\n");
-    exitCode = InitPeripheralsAndHandlers();
+
+    ReadWifiConfig(true);
+
+	exitCode = InitPeripheralsAndHandlers();
 
     const int fdRed = GPIO_OpenAsOutput(SAMPLE_RGBLED_RED, GPIO_OutputMode_PushPull, GPIO_Value_High);
     if (fdRed < 0) {
