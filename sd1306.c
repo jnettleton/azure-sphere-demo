@@ -483,10 +483,10 @@ void sd1306_draw_fill_circle(int32_t x, int32_t y, int32_t radius, uint8_t color
 
 	do
 	{
-		sd1306_draw_line(x - a, y + b, x + a, y + b, color);
-		sd1306_draw_line(x - a, y - b, x + a, y - b, color);
-		sd1306_draw_line(x - b, y + a, x + b, y + a, color);
-		sd1306_draw_line(x - b, y - a, x + b, y - a, color);
+		sd1306_draw_line((uint8_t)(x - a), (uint8_t)(y + b), (uint8_t)(x + a), (uint8_t)(y + b), color);
+		sd1306_draw_line((uint8_t)(x - a), (uint8_t)(y - b), (uint8_t)(x + a), (uint8_t)(y - b), color);
+		sd1306_draw_line((uint8_t)(x - b), (uint8_t)(y + a), (uint8_t)(x + b), (uint8_t)(y + a), color);
+		sd1306_draw_line((uint8_t)(x - b), (uint8_t)(y - a), (uint8_t)(x + b), (uint8_t)(y - a), color);
 
 		if (P < 0)
 		{
@@ -577,7 +577,7 @@ void sd1306_draw_fill_triangle(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, u
 		{
 			b = x2;
 		}
-		sd1306_draw_fast_Hline(a, y0, b - a + 1, color);
+		sd1306_draw_fast_Hline((uint8_t)(a), y0, (uint8_t)(b - a + 1), color);
 		return;
 	}
 
@@ -602,13 +602,13 @@ void sd1306_draw_fill_triangle(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, u
 	}
 	else
 	{
-		last = y1 - 1; // Skip it
+		last = (int16_t)(y1 - 1); // Skip it
 	}
 
 	for (y = y0; y <= last; y++)
 	{
-		a = x0 + sa / dy01;
-		b = x0 + sb / dy02;
+		a = (int16_t)(x0 + sa / dy01);
+		b = (int16_t)(x0 + sb / dy02);
 		sa += dx01;
 		sb += dx02;
 
@@ -616,7 +616,7 @@ void sd1306_draw_fill_triangle(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, u
 		{
 			_swap(a, b);
 		}
-		sd1306_draw_fast_Hline(a, y, b - a + 1, color);
+		sd1306_draw_fast_Hline((uint8_t)(a), (uint8_t)(y), (uint8_t)(b - a + 1), color);
 	}
 
 	// For lower part of triangle, find scanline crossings for segments
@@ -625,8 +625,8 @@ void sd1306_draw_fill_triangle(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, u
 	sb = dx02 * (y - y0);
 	for (; y <= y2; y++)
 	{
-		a = x1 + sa / dy12;
-		b = x0 + sb / dy02;
+		a = (int16_t)(x1 + sa / dy12);
+		b = (int16_t)(x0 + sb / dy02);
 		sa += dx12;
 		sb += dx02;
 
@@ -634,7 +634,7 @@ void sd1306_draw_fill_triangle(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, u
 		{
 			_swap(a, b);
 		}
-		sd1306_draw_fast_Hline(a, y, b - a + 1, color);
+		sd1306_draw_fast_Hline((uint8_t)(a), (uint8_t)(y), (uint8_t)(b - a + 1), color);
 	}
 }
 
@@ -648,9 +648,9 @@ void sd1306_draw_fill_triangle(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, u
   */
 void sd1306_draw_circle_helper(uint8_t x0, uint8_t y0, uint8_t radius, uint8_t cornername, uint8_t color)
 {
-	int16_t f = 1 - radius;
+	int16_t f = (int16_t)(1 - radius);
 	int16_t ddF_x = 1;
-	int16_t ddF_y = -2 * radius;
+	int16_t ddF_y = (int16_t)(-2 * radius);
 	int16_t x = 0;
 	int16_t y = radius;
 
@@ -659,12 +659,12 @@ void sd1306_draw_circle_helper(uint8_t x0, uint8_t y0, uint8_t radius, uint8_t c
 		if (f >= 0)
 		{
 			y--;
-			ddF_y += 2;
-			f += ddF_y;
+			ddF_y = (int16_t)(2 + ddF_y);
+			f = (int16_t)(f + ddF_y);
 		}
 		x++;
-		ddF_x += 2;
-		f += ddF_x;
+		ddF_x = (int16_t)(2 + ddF_x);
+		f = (int16_t)(f + ddF_x);
 		if (cornername & 0x4)
 		{
 			sd1306_draw_pixel(x0 + x, y0 + y, color);
@@ -699,9 +699,9 @@ void sd1306_draw_circle_helper(uint8_t x0, uint8_t y0, uint8_t radius, uint8_t c
   */
 void sd1306_draw_fillcircle_helper(uint8_t x0, uint8_t y0, uint8_t radius, uint8_t cornername, uint8_t delta, uint8_t color)
 {
-	int16_t f = 1 - radius;
+	int16_t f = (int16_t)(1 - radius);
 	int16_t ddF_x = 1;
-	int16_t ddF_y = -2 * radius;
+	int16_t ddF_y = (int16_t)(-2 * radius);
 	int16_t x = 0;
 	int16_t y = radius;
 
@@ -710,22 +710,22 @@ void sd1306_draw_fillcircle_helper(uint8_t x0, uint8_t y0, uint8_t radius, uint8
 		if (f >= 0)
 		{
 			y--;
-			ddF_y += 2;
-			f += ddF_y;
+			ddF_y = (int16_t)(2 + ddF_y);
+			f = (int16_t)(f + ddF_y);
 		}
 		x++;
-		ddF_x += 2;
-		f += ddF_x;
+		ddF_x = (int16_t)(2 + ddF_x);
+		f = (int16_t)(f + ddF_x);
 
 		if (cornername & 0x1)
 		{
-			sd1306_draw_line(x0 + x, y0 - y, x0 + x, y0 - y + 2 * y + 1 + delta, color);
-			sd1306_draw_line(x0 + y, y0 - x, x0 + y, y0 - x + 2 * x + 1 + delta, color);
+			sd1306_draw_line((uint8_t)(x0 + x), (uint8_t)(y0 - y), (uint8_t)(x0 + x), (uint8_t)(y0 - y + 2 * y + 1 + delta), color);
+			sd1306_draw_line((uint8_t)(x0 + y), (uint8_t)(y0 - x), (uint8_t)(x0 + y), (uint8_t)(y0 - x + 2 * x + 1 + delta), color);
 		}
 		if (cornername & 0x2)
 		{
-			sd1306_draw_line(x0 - x, y0 - y, x0 - x, y0 - y + 2 * y + 1 + delta, color);
-			sd1306_draw_line(x0 - y, y0 - x, x0 - y, y0 - x + 2 * x + 1 + delta, color);
+			sd1306_draw_line((uint8_t)(x0 - x), (uint8_t)(y0 - y), (uint8_t)(x0 - x), (uint8_t)(y0 - y + 2 * y + 1 + delta), color);
+			sd1306_draw_line((uint8_t)(x0 - y), (uint8_t)(y0 - x), (uint8_t)(x0 - y), (uint8_t)(y0 - x + 2 * x + 1 + delta), color);
 		}
 	}
 }
@@ -907,19 +907,13 @@ void fill_oled_buffer()
   */
 void sd1306_draw_arc(int32_t x, int32_t y, int32_t radius, int32_t a0, int32_t a1, uint8_t color)
 {
-	int32_t a, b, P;
-	a = 0x00;
-	b = radius;
-	P = 0x01 - radius;
-
-	int32_t angle;
+	int32_t a = 0x00;
+	int32_t b = radius;
+	int32_t P = 0x01 - radius;
 
 	do
 	{
-
-
-		angle = atan2f(b, a)*180.0 / 3.14;
-
+		int32_t angle = (int32_t)(atan2f((float)b, (float)a) * 180.0F / 3.14F);
 		angle < 0 ? angle += 360 : angle;
 
 		if (a1 > a0)
@@ -937,10 +931,7 @@ void sd1306_draw_arc(int32_t x, int32_t y, int32_t radius, int32_t a0, int32_t a
 			}
 		}
 
-
-
-		angle = atan2f(a, b)*180.0 / 3.14;
-
+		angle = (int32_t)(atan2f((float)a, (float)b)* 180.0F / 3.14F);
 		angle < 0 ? angle += 360 : angle;
 
 		if (a1 > a0)
@@ -958,10 +949,7 @@ void sd1306_draw_arc(int32_t x, int32_t y, int32_t radius, int32_t a0, int32_t a
 			}
 		}
 
-
-
-		angle = atan2f(b, -a)*180.0 / 3.14;
-
+		angle = (int32_t)(atan2f((float)b, (float)(-a)) * 180.0F / 3.14F);
 		angle < 0 ? angle += 360 : angle;
 
 		if (a1 > a0)
@@ -979,9 +967,7 @@ void sd1306_draw_arc(int32_t x, int32_t y, int32_t radius, int32_t a0, int32_t a
 			}
 		}
 
-
-		angle = atan2f(a, -b)*180.0 / 3.14;
-
+		angle = (int32_t)(atan2f((float)a, (float)-b) * 180.0F / 3.14F);
 		angle < 0 ? angle += 360 : angle;
 
 		if (a1 > a0)
@@ -999,9 +985,7 @@ void sd1306_draw_arc(int32_t x, int32_t y, int32_t radius, int32_t a0, int32_t a
 			}
 		}
 
-
-		angle = atan2f(-a, b)*180.0 / 3.14;
-
+		angle = (int32_t)(atan2f((float)-a, (float)b) * 180.0F / 3.14F);
 		angle < 0 ? angle += 360 : angle;
 
 		if (a1 > a0)
@@ -1019,10 +1003,7 @@ void sd1306_draw_arc(int32_t x, int32_t y, int32_t radius, int32_t a0, int32_t a
 			}
 		}
 
-
-
-		angle = atan2f(-b, a)*180.0 / 3.14;
-
+		angle = (int32_t)(atan2f((float)-b, (float)a) * 180.0F / 3.14F);
 		angle < 0 ? angle += 360 : angle;
 
 		if (a1 > a0)
@@ -1040,10 +1021,7 @@ void sd1306_draw_arc(int32_t x, int32_t y, int32_t radius, int32_t a0, int32_t a
 			}
 		}
 
-
-
-		angle = atan2f(-b, -a)*180.0 / 3.14;
-
+		angle = (int32_t)(atan2f((float)-b, (float)-a) * 180.0F / 3.14F);
 		angle < 0 ? angle += 360 : angle;
 
 		if (a1 > a0)
@@ -1061,10 +1039,7 @@ void sd1306_draw_arc(int32_t x, int32_t y, int32_t radius, int32_t a0, int32_t a
 			}
 		}
 
-
-
-		angle = atan2f(-a, -b)*180.0 / 3.14;
-
+		angle = (int32_t)(atan2f((float)-a, (float)-b) * 180.0F / 3.14F);
 		angle < 0 ? angle += 360 : angle;
 
 		if (a1 > a0)
