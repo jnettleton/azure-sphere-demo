@@ -11,8 +11,12 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include <hw/demo_appliance.h>
+
 #include "oled.h"
 #include "build_options.h"
+#ifdef CLICK_AIRQUALITY7
+#include "airquality7.h"
+#endif
 
 #define LSM6DSO_ADDRESS 0x6A // I2C Address
 
@@ -36,6 +40,18 @@ extern float pressure_kPa;
 extern float lps22hh_temperature;
 extern int i2cFd;
 
+#ifdef CLICK_AIRQUALITY7
+extern uint16_t airquality7_tvoc_ppb;
+extern uint16_t airquality7_co2_ppm;
+extern uint32_t airquality7_res_val_ohm;
+
+extern uint8_t airquality7_rev_year;
+extern uint8_t airquality7_rev_month;
+extern uint8_t airquality7_rev_day;
+extern uint8_t airquality7_rev_ascii_code;
+
+uint8_t lp_get_click_air_quality(void);
+#endif
 
 void lp_imu_initialize(void);
 void lp_imu_close(void);

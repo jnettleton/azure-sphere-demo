@@ -104,6 +104,13 @@ void update_oled()
 			update_environ(lsm6dso_temperature, lps22hh_temperature, pressure_kPa);
 		}
 		break;
+#ifdef CLICK_AIRQUALITY7
+		case AIRQUALITY7:
+		{
+			update_airquality(airquality7_co2_ppm, airquality7_rev_year, airquality7_rev_month, airquality7_rev_day);
+		}
+		break;
+#endif
 		case OTHER:
 		{
 			update_other(light_sensor, 0, 0); 
@@ -528,6 +535,43 @@ void update_environ(float temp1, float temp2, float atm)
 	// Send the buffer to OLED RAM
 	sd1306_refresh();
 }
+
+#ifdef CLICK_AIRQUALITY7
+void update_airquality(uint16_t co2, uint8_t year, uint8_t month, uint8_t day)
+{
+	uint8_t string_data[10];
+
+	// Strings for labels
+	uint8_t str_co2[] = "CO2:";
+	uint8_t str_rev[] = "REV:";
+
+	// Clear OLED buffer
+	clear_oled_buffer();
+
+	// Draw the title
+	sd1306_draw_string(OLED_TITLE_X, OLED_TITLE_Y, "Air Quality", FONT_SIZE_TITLE, white_pixel);
+
+	// Convert x value to string
+	intToStr(co2, string_data, 4);
+
+	// Draw a label at line 1
+	sd1306_draw_string(OLED_LINE_1_X, OLED_LINE_1_Y, str_co2, FONT_SIZE_LINE, white_pixel);
+	// Draw the value of x
+	sd1306_draw_string(sizeof(str_co2) * 6, OLED_LINE_1_Y, string_data, FONT_SIZE_LINE, white_pixel);
+	// Draw the units of x
+	sd1306_draw_string(sizeof(str_co2) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_1_Y, "ppm", FONT_SIZE_LINE, white_pixel);
+
+	intToStr(year, string_data, 2);
+
+	// Draw a label at line 2
+	sd1306_draw_string(OLED_LINE_2_X, OLED_LINE_2_Y, str_rev, FONT_SIZE_LINE, white_pixel);
+	// Draw the value of temp2
+	sd1306_draw_string(sizeof(str_rev) * 6, OLED_LINE_2_Y, string_data, FONT_SIZE_LINE, white_pixel);
+
+	// Send the buffer to OLED RAM
+	sd1306_refresh();
+}
+#endif
 
 /**
   * @brief  Template to show other variables curently not available

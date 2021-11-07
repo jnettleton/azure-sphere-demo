@@ -31,12 +31,17 @@ SOFTWARE.
 
 #include <stdio.h>
 #include <stdint.h>
+#include "build_options.h"
 #include "sd1306.h"
 #include "applibs_versions.h"
 #include <applibs/wificonfig.h>
 //#include "deviceTwin.h"
 
+#ifdef CLICK_AIRQUALITY7
+#define OLED_NUM_SCREEN 8
+#else
 #define OLED_NUM_SCREEN 7
+#endif
 
 #define OLED_TITLE_X      0
 #define OLED_TITLE_Y      0 
@@ -75,6 +80,9 @@ enum oledStateEnum {
 	ACCEL_DATA,
 	ANGULAR_RATE_DATA,
 	ENVIRONMENT,
+#ifdef CLICK_AIRQUALITY7
+	AIRQUALITY7,
+#endif
 	OTHER,
 	LOGO
 };
@@ -83,6 +91,9 @@ enum oledBusStatusEnum {
 	CLEAR_BUFFER = 0,
 	LSM6DSO_STATUS_DISPLAY,
 	LPS22HH_STATUS_DISPLAY,
+#ifdef CLICK_AIRQUALITY7
+	AIRQUALITY7_STATUS_DISPLAY,
+#endif
 	I2C_INIT
 };
 
@@ -110,6 +121,9 @@ void update_network(void);
 void update_accel(float x, float y, float z);
 void update_angular_rate(float x, float y, float z);
 void update_environ(float temp1, float temp2, float atm);
+#ifdef CLICK_AIRQUALITY7
+void update_airquality(uint16_t co2, uint8_t year, uint8_t month, uint8_t day);
+#endif
 void update_other(float x, float y, float z);
 
 /**

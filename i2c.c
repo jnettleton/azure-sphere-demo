@@ -60,6 +60,9 @@ Acknowledgment: Built from ST Micro samples
 */
 
 #include "i2c.h"
+#ifdef CLICK_AIRQUALITY7
+#include "airquality7.h"
+#endif
 
 typedef union {
     int16_t i16bit[3];
@@ -95,6 +98,17 @@ static stmdev_ctx_t pressure_ctx;
 static bool initialized = false;
 bool lps22hhDetected = false;
 
+#ifdef CLICK_AIRQUALITY7
+static stmdev_ctx_t click_airquality7_ctx;
+uint16_t airquality7_tvoc_ppb;
+uint16_t airquality7_co2_ppm;
+uint32_t airquality7_res_val_ohm;
+uint8_t airquality7_rev_year = AIRQUALITY7_DUMMY;
+uint8_t airquality7_rev_month = AIRQUALITY7_DUMMY;
+uint8_t airquality7_rev_day = AIRQUALITY7_DUMMY;
+uint8_t airquality7_rev_ascii_code = AIRQUALITY7_DUMMY;
+#endif
+
 // Global variables to hold the most recent sensor data
 AccelerationgForce acceleration_g;
 AngularRateDegreesPerSecond angular_rate_dps;
@@ -108,6 +122,10 @@ uint8_t lsm6dso_status = 1;
 uint8_t lps22hh_status = 1;
 uint8_t RTCore_status = 1;
 #endif 
+
+#ifdef CLICK_AIRQUALITY7
+#endif
+
 
 /*
  *   WARNING:
@@ -221,7 +239,6 @@ static void platform_init(void)
 	//oled_draw_logo();
 	oled_i2c_bus_status(CLEAR_BUFFER);
 #endif
-
 }
 
 AccelerationgForce lp_get_acceleration(void)
@@ -461,6 +478,13 @@ bool detect_lps22hh(void)
     return lps22hhDetected;
 }
 
+#ifdef CLICK_AIRQUALITY7
+uint8_t lp_get_click_air_quality(void)
+{
+    return airquality7_get_status(&airquality7_tvoc_ppb, &airquality7_co2_ppm, &airquality7_res_val_ohm, AIRQUALITY7_NULL);
+}
+#endif
+
 void lp_imu_initialize(void)
 {
     if (initialized) {
@@ -497,9 +521,9 @@ void lp_imu_initialize(void)
     }
     Log_Debug("LSM6DS0 Found!\n");
 #ifdef OLED_SD1306
-		// OLED update
-		lsm6dso_status = 0;
-		oled_i2c_bus_status(LSM6DSO_STATUS_DISPLAY);
+	// OLED update
+	lsm6dso_status = 0;
+	oled_i2c_bus_status(LSM6DSO_STATUS_DISPLAY);
 #endif
 
     /* Restore default configuration */
@@ -543,6 +567,9 @@ void lp_imu_initialize(void)
 
     lp_calibrate_angular_rate();
 
+#ifdef CLICK_AIRQUALITY7
+    airquality7_get_revision(&airquality7_rev_year, &airquality7_rev_month, &airquality7_rev_day, &airquality7_rev_ascii_code);
+#endif
 
     // read_imu();
 

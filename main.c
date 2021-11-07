@@ -243,7 +243,6 @@ static void UpdateOledEventHandler(EventLoopTimer* timer)
 /// </summary>
 static void ReadSensorTimerEventHandler(EventLoopTimer* timer)
 {
-
     if (ConsumeEventLoopTimerEvent(timer) != 0) {
         exitCode = ExitCode_ButtonTimer_Consume;
         return;
@@ -270,6 +269,17 @@ static void ReadSensorTimerEventHandler(EventLoopTimer* timer)
         Log_Debug("LPS22HH: Pressure     [kPa] : Not read!\n");
         Log_Debug("LPS22HH: Temperature  [degC]: Not read!\n");
     }
+
+#ifdef CLICK_AIRQUALITY7
+    const uint8_t clickErrorCode = lp_get_click_air_quality();
+    if (clickErrorCode == AIRQUALITY7_ERR_OK)
+    {
+        Log_Debug("AIRQUALITY: CO2            [ppm]: %d\n", airquality7_co2_ppm);
+        Log_Debug("AIRQUALITY: tVOC           [ppb]: %d\n", airquality7_tvoc_ppb);
+        Log_Debug("AIRQUALITY: Resistor Value [ohm]: %d\n", airquality7_res_val_ohm);
+        Log_Debug("AIRQUALITY: Revision    [m/d/yy]: %d/%d/%d\n", airquality7_rev_month, airquality7_rev_day, airquality7_rev_year);
+    }
+#endif
 
 #ifdef M4_INTERCORE_COMMS
     Log_Debug("ALSPT19: Ambient Light[Lux] : %.2f\r\n", light_sensor);
@@ -381,8 +391,7 @@ static ExitCode InitPeripheralsAndHandlers(void)
 
     // Set up a timer to poll for button events.
     static const struct timespec buttonPressCheckPeriod = { .tv_sec = 0, .tv_nsec = 1000 * 1000 };
-    buttonPollTimer = CreateEventLoopPeriodicTimer(eventLoop, &ButtonPollTimerEventHandler,
-        &buttonPressCheckPeriod);
+    buttonPollTimer = CreateEventLoopPeriodicTimer(eventLoop, &ButtonPollTimerEventHandler, &buttonPressCheckPeriod);
     if (buttonPollTimer == NULL) {
         return ExitCode_Init_ButtonPollTimer;
     }
@@ -390,8 +399,7 @@ static ExitCode InitPeripheralsAndHandlers(void)
 #ifdef OLED_SD1306
     // Set up a timer to drive quick oled updates.
     static const struct timespec oledUpdatePeriod = { .tv_sec = 0, .tv_nsec = 100 * 1000 * 1000 };
-    oledUpdateTimer = CreateEventLoopPeriodicTimer(eventLoop, &UpdateOledEventHandler,
-        &oledUpdatePeriod);
+    oledUpdateTimer = CreateEventLoopPeriodicTimer(eventLoop, &UpdateOledEventHandler, &oledUpdatePeriod);
     if (oledUpdateTimer == NULL) {
         return ExitCode_Init_OledUpdateTimer;
     }

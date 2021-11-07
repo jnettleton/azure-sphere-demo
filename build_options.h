@@ -30,13 +30,16 @@
 #define IOT_HUB_APPLICATION
 #endif 
 
-
 // Include SD1306 OLED code
 // To use the OLED 
 // Install a 128x64 OLED display onto the unpopulated J7 Display connector
 // https://www.amazon.com/gp/product/B06XRCQZRX/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1
 // Enable the OLED_SD1306 #define below
 #define OLED_SD1306
+
+// Mikroe CLICK Module - Air Quality 7
+// https://www.mikroe.com/air-quality-7-click
+#define CLICK_AIRQUALITY7
 
 // Include Intercore Communication code
 // This will enable reading the ALST19 light sensor data from the M4 application
