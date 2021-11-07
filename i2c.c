@@ -479,7 +479,7 @@ bool detect_lps22hh(void)
 }
 
 #ifdef CLICK_AIRQUALITY7
-uint8_t lp_get_click_air_quality(void)
+airquality7_err_t lp_get_click_air_quality(void)
 {
     return airquality7_get_status(&airquality7_tvoc_ppb, &airquality7_co2_ppm, &airquality7_res_val_ohm, AIRQUALITY7_NULL);
 }
@@ -568,7 +568,11 @@ void lp_imu_initialize(void)
     lp_calibrate_angular_rate();
 
 #ifdef CLICK_AIRQUALITY7
-    airquality7_get_revision(&airquality7_rev_year, &airquality7_rev_month, &airquality7_rev_day, &airquality7_rev_ascii_code);
+    const airquality7_err_t result = airquality7_get_revision(&airquality7_rev_year, &airquality7_rev_month, &airquality7_rev_day, &airquality7_rev_ascii_code);
+    if (result != AIRQUALITY7_ERR_OK)
+    {
+        Log_Debug("ERROR: Airquality7 get revision: %s (%d).\n", strerror(errno), errno);
+    }
 #endif
 
     // read_imu();

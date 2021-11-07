@@ -1,7 +1,7 @@
 #include "airquality7.h"
 
 static void airquality7_communication_delay( void );
-static uint8_t airquality7_get_crc( uint8_t *data_in, uint8_t data_size );
+static airquality7_err_t airquality7_get_crc( uint8_t *data_in, uint8_t data_size );
 
 uint8_t airquality7_addr = AIRQUALITY7_DEV_ADDR;
 
@@ -49,6 +49,7 @@ airquality7_err_t airquality7_get_status(uint16_t *tvoc_ppb,
         Log_Debug("ERROR: AirQuality - unable to write command\n");
         return AIRQUALITY7_ERR_WRITE;
     }
+
     exitCode = airquality7_generic_read(tmp_data);
     if (exitCode != 0)
     {
@@ -113,8 +114,11 @@ airquality7_err_t airquality7_get_revision(uint8_t *year,
     tmp_data[0] = AIRQUALITY7_CMD_GET_REVISION;
     tmp_data[5] = airquality7_get_crc(tmp_data, 5);
 
-    airquality7_generic_write(tmp_data);
-    airquality7_generic_read(tmp_data);
+    int32_t exitCode = airquality7_generic_write(tmp_data);
+    if (exitCode != 0) return AIRQUALITY7_ERR_WRITE;
+
+    exitCode = airquality7_generic_read(tmp_data);
+    if (exitCode != 0) return AIRQUALITY7_ERR_READ;
 
     crc_calc = airquality7_get_crc(tmp_data, 6);
     if (crc_calc != tmp_data[6])

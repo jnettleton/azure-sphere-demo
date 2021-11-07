@@ -284,10 +284,8 @@ typedef union{
   *
   */
 
-int32_t lps22hh_read_reg(stmdev_ctx_t *ctx, uint8_t reg, uint8_t* data,
-                         uint16_t len);
-int32_t lps22hh_write_reg(stmdev_ctx_t *ctx, uint8_t reg, uint8_t* data,
-                          uint16_t len);
+int32_t lps22hh_read_reg(stmdev_ctx_t *ctx, uint8_t reg, uint8_t* data, uint16_t len);
+int32_t lps22hh_write_reg(stmdev_ctx_t *ctx, uint8_t reg, uint8_t* data, uint16_t len);
 
 extern float_t lps22hh_from_lsb_to_hpa(uint32_t lsb);
 extern float_t lps22hh_from_lsb_to_celsius(int16_t lsb);

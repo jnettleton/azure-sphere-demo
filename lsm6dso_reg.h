@@ -1522,10 +1522,8 @@ typedef union{
   *
   */
 
-int32_t lsm6dso_read_reg(stmdev_ctx_t *ctx, uint8_t reg, uint8_t* data,
-                         uint16_t len);
-int32_t lsm6dso_write_reg(stmdev_ctx_t *ctx, uint8_t reg, uint8_t* data,
-                          uint16_t len);
+int32_t lsm6dso_read_reg(stmdev_ctx_t *ctx, uint8_t reg, uint8_t* data, uint16_t len);
+int32_t lsm6dso_write_reg(stmdev_ctx_t *ctx, uint8_t reg, uint8_t* data, uint16_t len);
 
 extern float_t lsm6dso_from_fs2_to_mg(int16_t lsb);
 extern float_t lsm6dso_from_fs4_to_mg(int16_t lsb);

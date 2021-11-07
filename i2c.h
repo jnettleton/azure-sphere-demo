@@ -1,7 +1,5 @@
 #pragma once
 
-#include "lsm6dso_reg.h"
-#include "lps22hh_reg.h"
 #include <applibs/i2c.h>
 #include <applibs/log.h>
 #include <errno.h>
@@ -12,8 +10,10 @@
 #include <unistd.h>
 #include <hw/demo_appliance.h>
 
-#include "oled.h"
 #include "build_options.h"
+#include "lsm6dso_reg.h"
+#include "lps22hh_reg.h"
+#include "oled.h"
 #ifdef CLICK_AIRQUALITY7
 #include "airquality7.h"
 #endif

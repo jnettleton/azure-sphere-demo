@@ -145,7 +145,7 @@ static void ButtonPollTimerEventHandler(EventLoopTimer* timer)
 
             if (oled_state < 0)
             {
-                oled_state = OLED_NUM_SCREEN;
+                oled_state = (int8_t)MAX_STATE - 1;
             }
 
             Log_Debug("OledState: %d\n", oled_state);
@@ -175,7 +175,7 @@ static void ButtonPollTimerEventHandler(EventLoopTimer* timer)
             // Use buttonB presses to drive OLED to display the next screen
             oled_state++;
 
-            if (oled_state > OLED_NUM_SCREEN)
+            if (oled_state >= (int8_t)MAX_STATE)
             {
                 oled_state = 0;
             }
@@ -271,8 +271,8 @@ static void ReadSensorTimerEventHandler(EventLoopTimer* timer)
     }
 
 #ifdef CLICK_AIRQUALITY7
-    const uint8_t clickErrorCode = lp_get_click_air_quality();
-    if (clickErrorCode == AIRQUALITY7_ERR_OK)
+    const airquality7_err_t result = lp_get_click_air_quality();
+    if (result == AIRQUALITY7_ERR_OK)
     {
         Log_Debug("AIRQUALITY: CO2            [ppm]: %d\n", airquality7_co2_ppm);
         Log_Debug("AIRQUALITY: tVOC           [ppb]: %d\n", airquality7_tvoc_ppb);

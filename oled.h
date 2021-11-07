@@ -84,7 +84,8 @@ enum oledStateEnum {
 	AIRQUALITY7,
 #endif
 	OTHER,
-	LOGO
+	LOGO,
+	MAX_STATE // last state
 };
 
 enum oledBusStatusEnum {

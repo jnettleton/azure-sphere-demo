@@ -47,8 +47,7 @@
   * @retval          interface status (MANDATORY: return 0 -> no Error)
   *
   */
-int32_t lsm6dso_read_reg(stmdev_ctx_t* ctx, uint8_t reg, uint8_t* data,
-                         uint16_t len)
+int32_t lsm6dso_read_reg(stmdev_ctx_t* ctx, uint8_t reg, uint8_t* data, uint16_t len)
 {
   int32_t ret;
   ret = ctx->read_reg(ctx->handle, reg, data, len);
@@ -65,8 +64,7 @@ int32_t lsm6dso_read_reg(stmdev_ctx_t* ctx, uint8_t reg, uint8_t* data,
   * @retval          interface status (MANDATORY: return 0 -> no Error)
   *
   */
-int32_t lsm6dso_write_reg(stmdev_ctx_t* ctx, uint8_t reg, uint8_t* data,
-                          uint16_t len)
+int32_t lsm6dso_write_reg(stmdev_ctx_t* ctx, uint8_t reg, uint8_t* data, uint16_t len)
 {
   int32_t ret;
   ret = ctx->write_reg(ctx->handle, reg, data, len);
@@ -656,8 +654,7 @@ int32_t lsm6dso_block_data_update_get(stmdev_ctx_t *ctx, uint8_t *val)
   * @param  val      change the values of usr_off_w in reg CTRL6_C
   *
   */
-int32_t lsm6dso_xl_offset_weight_set(stmdev_ctx_t *ctx,
-                                     lsm6dso_usr_off_w_t val)
+int32_t lsm6dso_xl_offset_weight_set(stmdev_ctx_t *ctx, lsm6dso_usr_off_w_t val)
 {
   lsm6dso_ctrl6_c_t reg;
   int32_t ret;
@@ -678,8 +675,7 @@ int32_t lsm6dso_xl_offset_weight_set(stmdev_ctx_t *ctx,
   * @param    val      Get the values of usr_off_w in reg CTRL6_C
   *
   */
-int32_t lsm6dso_xl_offset_weight_get(stmdev_ctx_t *ctx,
-                                     lsm6dso_usr_off_w_t *val)
+int32_t lsm6dso_xl_offset_weight_get(stmdev_ctx_t *ctx, lsm6dso_usr_off_w_t *val)
 {
   lsm6dso_ctrl6_c_t reg;
   int32_t ret;
@@ -708,8 +704,7 @@ int32_t lsm6dso_xl_offset_weight_get(stmdev_ctx_t *ctx,
   *                               reg CTRL6_C
   *
   */
-int32_t lsm6dso_xl_power_mode_set(stmdev_ctx_t *ctx,
-                                  lsm6dso_xl_hm_mode_t val)
+int32_t lsm6dso_xl_power_mode_set(stmdev_ctx_t *ctx, lsm6dso_xl_hm_mode_t val)
 {
   lsm6dso_ctrl5_c_t ctrl5_c;
   lsm6dso_ctrl6_c_t ctrl6_c;
@@ -737,8 +732,7 @@ int32_t lsm6dso_xl_power_mode_set(stmdev_ctx_t *ctx,
   * @param  val      Get the values of xl_hm_mode in reg CTRL6_C
   *
   */
-int32_t lsm6dso_xl_power_mode_get(stmdev_ctx_t *ctx,
-                                  lsm6dso_xl_hm_mode_t *val)
+int32_t lsm6dso_xl_power_mode_get(stmdev_ctx_t *ctx, lsm6dso_xl_hm_mode_t *val)
 {
   lsm6dso_ctrl5_c_t ctrl5_c;
   lsm6dso_ctrl6_c_t ctrl6_c;
@@ -772,8 +766,7 @@ int32_t lsm6dso_xl_power_mode_get(stmdev_ctx_t *ctx,
   * @param  val      change the values of g_hm_mode in reg CTRL7_G
   *
   */
-int32_t lsm6dso_gy_power_mode_set(stmdev_ctx_t *ctx,
-                                  lsm6dso_g_hm_mode_t val)
+int32_t lsm6dso_gy_power_mode_set(stmdev_ctx_t *ctx, lsm6dso_g_hm_mode_t val)
 {
   lsm6dso_ctrl7_g_t reg;
   int32_t ret;
@@ -793,8 +786,7 @@ int32_t lsm6dso_gy_power_mode_set(stmdev_ctx_t *ctx,
   * @param  val      Get the values of g_hm_mode in reg CTRL7_G
   *
   */
-int32_t lsm6dso_gy_power_mode_get(stmdev_ctx_t *ctx,
-                                  lsm6dso_g_hm_mode_t *val)
+int32_t lsm6dso_gy_power_mode_get(stmdev_ctx_t *ctx, lsm6dso_g_hm_mode_t *val)
 {
   lsm6dso_ctrl7_g_t reg;
   int32_t ret;
@@ -8564,8 +8556,7 @@ int32_t lsm6dso_sh_cfg_write(stmdev_ctx_t *ctx, lsm6dso_sh_cfg_write_t *val)
   *                      - uint8_t slv1_len;    num of bit to read
   *
   */
-int32_t lsm6dso_sh_slv0_cfg_read(stmdev_ctx_t *ctx,
-                                 lsm6dso_sh_cfg_read_t *val)
+int32_t lsm6dso_sh_slv0_cfg_read(stmdev_ctx_t *ctx, lsm6dso_sh_cfg_read_t *val)
 {
   lsm6dso_slv0_add_t slv0_add;
   lsm6dso_slv0_config_t slv0_config;
