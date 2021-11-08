@@ -7,13 +7,14 @@ uint8_t airquality7_addr = AIRQUALITY7_DEV_ADDR;
 
 int32_t airquality7_generic_write(uint8_t *data_buf)
 {  
-    return I2CMaster_Write(i2cFd, airquality7_addr, data_buf, 6);
+    //airquality7_communication_delay();
+    return I2CMaster_Write(i2cIsu2Fd, airquality7_addr, data_buf, 6);
 }
 
 int32_t airquality7_generic_read(uint8_t *data_buf)
 {
     airquality7_communication_delay();
-    return I2CMaster_Write(i2cFd, airquality7_addr, data_buf, 7);
+    return I2CMaster_Write(i2cIsu2Fd, airquality7_addr, data_buf, 7);
 }
 
 void airquality7_set_ppmco2(uint8_t *ppmco2_value)
@@ -46,14 +47,14 @@ airquality7_err_t airquality7_get_status(uint16_t *tvoc_ppb,
     int32_t exitCode = airquality7_generic_write(tmp_data);
     if (exitCode != 0)
     {
-        Log_Debug("ERROR: AirQuality - unable to write command\n");
+        Log_Debug("ERROR: AirQuality get status write: %s (%d)\n", strerror(errno), errno);
         return AIRQUALITY7_ERR_WRITE;
     }
 
     exitCode = airquality7_generic_read(tmp_data);
     if (exitCode != 0)
     {
-        Log_Debug("ERROR: AirQuality - unable to read data\n");
+        Log_Debug("ERROR: AirQuality get status read: %s (%d)\n", strerror(errno), errno);
         return AIRQUALITY7_ERR_READ;
     }
 

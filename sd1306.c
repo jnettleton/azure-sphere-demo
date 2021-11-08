@@ -66,7 +66,7 @@ int32_t sd1306_send_command(uint8_t addr, uint8_t cmd)
 	// Commando to send
 	data_to_send[1] = cmd;
 	// Send the data by I2C bus
-	retval = I2CMaster_Write(i2cFd, addr, data_to_send, 2);
+	retval = I2CMaster_Write(i2cIsu2Fd, addr, data_to_send, 2);
 	return retval;
 }
 
@@ -91,14 +91,14 @@ int32_t sd1306_write_data(uint8_t addr, uint8_t *data)
 	}
 
 	// Send the data by I2C bus
-	retval = I2CMaster_Write(i2cFd, addr, data_to_send, 1025);
+	retval = I2CMaster_Write(i2cIsu2Fd, addr, data_to_send, 1025);
 	return retval;
 }
 
 /**
   * @brief  Initialize sd1306.
   * @param  None.
-  * @retval Positive if was unsuccefully, zero if was succefully.
+  * @retval Positive if was unsuccessful, zero if was successful.
   */
 uint8_t sd1306_init(void)
 {
@@ -107,7 +107,7 @@ uint8_t sd1306_init(void)
 	{
 		return 1;
 	}
-	// Set display oscillator freqeuncy and divide ratio
+	// Set display oscillator frequency and divide ratio
 	sd1306_send_command(sd1306_ADDR, 0xd5);
 	sd1306_send_command(sd1306_ADDR, 0x50);
 
@@ -117,9 +117,9 @@ uint8_t sd1306_init(void)
 	// Set display start line
 	sd1306_send_command(sd1306_ADDR, 0xd3);
 	sd1306_send_command(sd1306_ADDR, 0x00);
-	// Set the lower comulmn address
+	// Set the lower column address
 	sd1306_send_command(sd1306_ADDR, 0x00);
-	// Set the higher comulmn address
+	// Set the higher column address
 	sd1306_send_command(sd1306_ADDR, 0x10);
 	
 	// Set page address
@@ -146,7 +146,7 @@ uint8_t sd1306_init(void)
 	// Contrast data
 	sd1306_send_command(sd1306_ADDR, 0x00);
 
-	// Set discharge precharge periods
+	// Set discharge recharge periods
 	sd1306_send_command(sd1306_ADDR, 0xd9);
 	sd1306_send_command(sd1306_ADDR, 0xf1);
 
@@ -154,7 +154,7 @@ uint8_t sd1306_init(void)
 	sd1306_send_command(sd1306_ADDR, 0xdb);
 	sd1306_send_command(sd1306_ADDR, 0x40);
 
-	// Set Enire display
+	// Set Entire display
 	sd1306_send_command(sd1306_ADDR, 0xa4);
 	
 	// Set Normal display

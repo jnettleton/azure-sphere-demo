@@ -92,14 +92,14 @@ static uint8_t whoamI, rst;
 
 // static uint8_t tx_buffer[1000];
 
-int i2cFd = -1;
+int i2cIsu2Fd = -1;
+int i2cIsu1Fd = -1;
 static stmdev_ctx_t dev_ctx;
 static stmdev_ctx_t pressure_ctx;
 static bool initialized = false;
 bool lps22hhDetected = false;
 
 #ifdef CLICK_AIRQUALITY7
-static stmdev_ctx_t click_airquality7_ctx;
 uint16_t airquality7_tvoc_ppb;
 uint16_t airquality7_co2_ppm;
 uint32_t airquality7_res_val_ohm;
@@ -206,23 +206,43 @@ static void platform_delay(uint32_t ms)
  */
 static void platform_init(void)
 {
-    i2cFd = I2CMaster_Open(AVNET_MT3620_SK_ISU2_I2C);
-    if (i2cFd < 0) {
+    i2cIsu2Fd = I2CMaster_Open(AVNET_MT3620_SK_ISU2_I2C);
+    if (i2cIsu2Fd < 0) {
         Log_Debug("ERROR: I2CMaster_Open: errno=%d (%s)\n", errno, strerror(errno));
         return;
     }
 
-    int result = I2CMaster_SetBusSpeed(i2cFd, I2C_BUS_SPEED_STANDARD);
+    int result = I2CMaster_SetBusSpeed(i2cIsu2Fd, I2C_BUS_SPEED_STANDARD);
     if (result != 0) {
         Log_Debug("ERROR: I2CMaster_SetBusSpeed: errno=%d (%s)\n", errno, strerror(errno));
         return;
     }
 
-    result = I2CMaster_SetTimeout(i2cFd, 100);
+    result = I2CMaster_SetTimeout(i2cIsu2Fd, 100);
     if (result != 0) {
         Log_Debug("ERROR: I2CMaster_SetTimeout: errno=%d (%s)\n", errno, strerror(errno));
         return;
     }
+
+#if FALSE
+    i2cIsu1Fd = I2CMaster_Open(AVNET_MT3620_SK_ISU1_I2C);
+    if (i2cIsu1Fd < 0) {
+        Log_Debug("ERROR: I2CMaster_Open: errno=%d (%s)\n", errno, strerror(errno));
+        return;
+    }
+
+    result = I2CMaster_SetBusSpeed(i2cIsu1Fd, I2C_BUS_SPEED_STANDARD);
+    if (result != 0) {
+        Log_Debug("ERROR: I2CMaster_SetBusSpeed: errno=%d (%s)\n", errno, strerror(errno));
+        return;
+    }
+
+    result = I2CMaster_SetTimeout(i2cIsu1Fd, 100);
+    if (result != 0) {
+        Log_Debug("ERROR: I2CMaster_SetTimeout: errno=%d (%s)\n", errno, strerror(errno));
+        return;
+    }
+#endif
 
 #ifdef OLED_SD1306
 	// Start OLED
@@ -494,12 +514,12 @@ void lp_imu_initialize(void)
     /* Initialize mems driver interface */
     dev_ctx.write_reg = platform_write;
     dev_ctx.read_reg = platform_read;
-    dev_ctx.handle = &i2cFd;
+    dev_ctx.handle = &i2cIsu2Fd;
 
     // Initialize lps22hh mems driver interface
     pressure_ctx.read_reg = lsm6dso_read_lps22hh_cx;
     pressure_ctx.write_reg = lsm6dso_write_lps22hh_cx;
-    pressure_ctx.handle = &i2cFd;
+    pressure_ctx.handle = &i2cIsu2Fd;
 
     /* Init test platform */
     platform_init();
@@ -601,7 +621,8 @@ static void CloseFdPrintError(int fd, const char *fdName)
 /// </summary>
 void lp_imu_close(void)
 {
-    CloseFdPrintError(i2cFd, "i2c");
+    CloseFdPrintError(i2cIsu2Fd, "i2c");
+    CloseFdPrintError(i2cIsu1Fd, "i2c");
 }
 
 /*

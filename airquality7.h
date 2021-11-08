@@ -2,11 +2,12 @@
 #define AIRQUALITY7_H
 
 #include <stdint.h>
-#include "i2c.h"
 #include <applibs/i2c.h>
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
+
+#include "i2c.h"
 
 
 #define AIRQUALITY7_RETVAL  uint8_t

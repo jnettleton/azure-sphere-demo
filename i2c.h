@@ -38,7 +38,8 @@ extern AngularRateDegreesPerSecond angular_rate_dps;
 extern float lsm6dso_temperature;
 extern float pressure_kPa;
 extern float lps22hh_temperature;
-extern int i2cFd;
+extern int i2cIsu1Fd;
+extern int i2cIsu2Fd;
 
 #ifdef CLICK_AIRQUALITY7
 extern uint16_t airquality7_tvoc_ppb;
