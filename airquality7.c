@@ -7,7 +7,7 @@ uint8_t airquality7_addr = AIRQUALITY7_DEV_ADDR;
 
 int32_t airquality7_generic_write(uint8_t *data_buf)
 {  
-    //airquality7_communication_delay();
+    airquality7_communication_delay();
     return I2CMaster_Write(i2cIsu2Fd, airquality7_addr, data_buf, 6);
 }
 
@@ -15,6 +15,11 @@ int32_t airquality7_generic_read(uint8_t *data_buf)
 {
     airquality7_communication_delay();
     return I2CMaster_Write(i2cIsu2Fd, airquality7_addr, data_buf, 7);
+}
+
+int32_t airquality7_generic_write_then_read(uint8_t* write_buf, uint8_t* read_buf)
+{
+    return I2CMaster_WriteThenRead(i2cIsu2Fd, airquality7_addr, write_buf, 6, read_buf, 7);
 }
 
 void airquality7_set_ppmco2(uint8_t *ppmco2_value)
@@ -38,25 +43,41 @@ airquality7_err_t airquality7_get_status(uint16_t *tvoc_ppb,
                                          uint32_t *res_val_ohm, 
                                          uint8_t *err_byte)
 {
+#if true2
     uint8_t tmp_data[7] = { AIRQUALITY7_DUMMY };
     uint8_t crc_calc = AIRQUALITY7_DUMMY;
-    
+
     tmp_data[0] = AIRQUALITY7_CMD_GET_STATUS;
     tmp_data[5] = airquality7_get_crc(tmp_data, 5);
 
     int32_t exitCode = airquality7_generic_write(tmp_data);
     if (exitCode != 0)
     {
-        Log_Debug("ERROR: AirQuality get status write: %s (%d)\n", strerror(errno), errno);
+        Log_Debug("ERROR: AirQuality7 get status write: %s (%d)\n", strerror(errno), errno);
         return AIRQUALITY7_ERR_WRITE;
     }
 
     exitCode = airquality7_generic_read(tmp_data);
     if (exitCode != 0)
     {
-        Log_Debug("ERROR: AirQuality get status read: %s (%d)\n", strerror(errno), errno);
+        Log_Debug("ERROR: AirQuality7 get status read: %s (%d)\n", strerror(errno), errno);
         return AIRQUALITY7_ERR_READ;
     }
+#else
+    uint8_t tmp_data[7] = { AIRQUALITY7_DUMMY };
+    uint8_t crc_calc = AIRQUALITY7_DUMMY;
+
+    uint8_t write_data[6] = { AIRQUALITY7_DUMMY };
+    write_data[0] = AIRQUALITY7_CMD_GET_STATUS;
+    write_data[5] = airquality7_get_crc(tmp_data, 5);
+
+    int32_t exitCode = airquality7_generic_write_then_read(write_data, tmp_data);
+    if (exitCode != 0)
+    {
+        Log_Debug("ERROR: AirQuality7 get status: %s (%d)\n", strerror(errno), errno);
+        return AIRQUALITY7_ERR_READ;
+    }
+#endif
 
     crc_calc = airquality7_get_crc(tmp_data, 6);
     if (crc_calc != tmp_data[6])
@@ -109,9 +130,10 @@ airquality7_err_t airquality7_get_revision(uint8_t *year,
                                            uint8_t *day, 
                                            uint8_t *ascii_code)
 {
-    uint8_t tmp_data[7] = { AIRQUALITY7_DUMMY };
+#if true2
     uint8_t crc_calc = AIRQUALITY7_DUMMY;
 
+    uint8_t tmp_data[7] = { AIRQUALITY7_DUMMY };
     tmp_data[0] = AIRQUALITY7_CMD_GET_REVISION;
     tmp_data[5] = airquality7_get_crc(tmp_data, 5);
 
@@ -120,6 +142,17 @@ airquality7_err_t airquality7_get_revision(uint8_t *year,
 
     exitCode = airquality7_generic_read(tmp_data);
     if (exitCode != 0) return AIRQUALITY7_ERR_READ;
+#else
+    uint8_t tmp_data[7] = { AIRQUALITY7_DUMMY };
+    uint8_t crc_calc = AIRQUALITY7_DUMMY;
+
+    uint8_t write_data[6] = { AIRQUALITY7_DUMMY };
+    write_data[0] = AIRQUALITY7_CMD_GET_REVISION;
+    write_data[5] = airquality7_get_crc(write_data, 5);
+
+    int32_t exitCode = airquality7_generic_write_then_read(write_data, tmp_data);
+    if (exitCode != 0) return AIRQUALITY7_ERR_READ;
+#endif
 
     crc_calc = airquality7_get_crc(tmp_data, 6);
     if (crc_calc != tmp_data[6])
@@ -169,9 +202,10 @@ airquality7_err_t airquality7_get_r0_calib(uint16_t *r0_kohm)
 
     if (r0_kohm != AIRQUALITY7_NULL)
     {
-        *r0_kohm = tmp_data[1];
-        *r0_kohm <<= 8;
-        *r0_kohm |= tmp_data[0];
+        //*r0_kohm = tmp_data[1];
+        //*r0_kohm = (uint16_t)(*r0_kohm << 8);
+        //*r0_kohm = (uint16_t)(*r0_kohm | tmp_data[0]);
+        *r0_kohm = (uint16_t)((tmp_data[1] << 8) | tmp_data[0]);
     }
 
     return AIRQUALITY7_ERR_OK;
@@ -196,15 +230,15 @@ static uint8_t airquality7_get_crc( uint8_t *data_in, uint8_t data_size )
     uint8_t cnt = 0x00;
     uint16_t sum = 0x0000;
  
-    for ( cnt = 0; cnt < data_size; cnt++ )
+    for (cnt = 0; cnt < data_size; cnt++)
     {
-        sum += *data_in;
+        sum = (uint16_t)(sum + *data_in);
         data_in++;
     }
     
-    crc = sum;
-    crc += ( sum / 0x0100 );
-    crc = 0xFF - crc;
+    crc = (uint8_t)sum;
+    crc = (uint8_t)(crc + sum / 0x0100);
+    crc = (uint8_t)(0xFF - crc);
 
     return crc;
 }

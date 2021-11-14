@@ -34,7 +34,6 @@
         {"Name": "SAMPLE_LPS22HH_SDA", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_GPIO33", "Comment": "MT3620 SK: LPS22HH pressure sensor."},
 
         {"Name": "SAMPLE_AMBIENT_LIGHT_ADC", "Type": "Adc", "Mapping": "AVNET_MT3620_SK_ADC_CONTROLLER0", "Comment": "MT3620 SK: Ambient light sensor."},
-        {"Name": "SAMPLE_AMBIENT_LIGHT_ADC_CHANNEL", "Type": "int", "Mapping": "MT3620_SK_ADC_CHANNEL0", "Comment": "Channel 0 using ambient light sensor."},
 
         {"Name": "SAMPLE_OLED_I2C", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_ISU2_I2C", "Comment": "MT3620 SK: OLED I2C."},
         {"Name": "SAMPLE_OLED_SCL", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_GPIO37", "Comment": "MT3620 SK: OLED SLC."},
