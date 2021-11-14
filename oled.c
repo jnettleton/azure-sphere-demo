@@ -265,12 +265,12 @@ uint16_t get_channel(uint16_t freq_MHz)
 	if (freq_MHz < 5000 && freq_MHz > 2400)
 	{
 		// channel of in 2.4 GHz band
-		freq_MHz -= 2407;
+		freq_MHz = (uint16_t)(freq_MHz - 2407);
 	}
 	else if(freq_MHz > 5000)
 	{
 		// channel of in 5 GHz band
-		freq_MHz -= 5000;
+		freq_MHz = (uint16_t)(freq_MHz - 5000);
 	}
 	else
 	{
@@ -317,7 +317,7 @@ void update_network()
 	sd1306_draw_string(OLED_LINE_2_X, OLED_LINE_2_Y, str_freq, FONT_SIZE_LINE, white_pixel);
 
 	// Convert frequency value to string
-	intToStr(network_data.frequency_MHz, string_data, 1);
+	intToStr((int32_t)network_data.frequency_MHz, string_data, 1);
 
 	// Draw frequency value
 	sd1306_draw_string(sizeof(str_freq) * 6, OLED_LINE_2_Y, string_data, FONT_SIZE_LINE, white_pixel);
@@ -326,9 +326,9 @@ void update_network()
 
 
 	// Draw channel label at line 2
-	sd1306_draw_string(sizeof(str_freq) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_2_Y, str_chan, FONT_SIZE_LINE, white_pixel);
+	sd1306_draw_string((int32_t)sizeof(str_freq) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_2_Y, str_chan, FONT_SIZE_LINE, white_pixel);
 
-	channel = get_channel(network_data.frequency_MHz);
+	channel = get_channel((uint16_t)network_data.frequency_MHz);
 
 	aux_size = get_str_size(string_data);
 
@@ -336,7 +336,7 @@ void update_network()
 	intToStr(channel, string_data, 1);
 
 	// Draw channel value
-	sd1306_draw_string(sizeof(str_freq) * 6 + (aux_size + sizeof(str_chan)+ 1) * 6, OLED_LINE_2_Y, string_data, FONT_SIZE_LINE, white_pixel);
+	sd1306_draw_string((int32_t)sizeof(str_freq) * 6 + (int32_t)(aux_size + sizeof(str_chan) + 1) * 6, OLED_LINE_2_Y, string_data, FONT_SIZE_LINE, white_pixel);
 
 	// Draw a label at line 3
 	sd1306_draw_string(OLED_LINE_3_X, OLED_LINE_3_Y, str_RSSI, FONT_SIZE_LINE, white_pixel);
@@ -351,7 +351,7 @@ void update_network()
 	sd1306_draw_string(sizeof(str_RSSI) * 6, OLED_LINE_3_Y, string_data, FONT_SIZE_LINE, white_pixel);
 
 	// Draw dBm unit
-	sd1306_draw_string(sizeof(str_freq) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_3_Y, "dBm", FONT_SIZE_LINE, white_pixel);
+	sd1306_draw_string((int32_t)sizeof(str_freq) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_3_Y, (uint8_t*)"dBm", FONT_SIZE_LINE, white_pixel);
 
 	// Send the buffer to OLED RAM
 	sd1306_refresh();
@@ -385,9 +385,9 @@ void update_accel(float x, float y, float z)
 	// Draw a label at line 1
 	sd1306_draw_string(OLED_LINE_1_X, OLED_LINE_1_Y, str_ax, FONT_SIZE_LINE, white_pixel);
 	// Draw the value of x
-	sd1306_draw_string(sizeof(str_ax) * 6, OLED_LINE_1_Y, string_data, FONT_SIZE_LINE, white_pixel);
+	sd1306_draw_string(sizeof(str_ax) * 6, OLED_LINE_1_Y, string_data, FONT_SIZE_LINE, (uint8_t)white_pixel);
 	// Draw the units of x
-	sd1306_draw_string(sizeof(str_ax) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_1_Y, "g", FONT_SIZE_LINE, white_pixel);
+	sd1306_draw_string((int32_t)sizeof(str_ax) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_1_Y, "g", FONT_SIZE_LINE, white_pixel);
 
 	// Convert y value to string
 	ftoa(y, string_data, 2);
@@ -397,7 +397,7 @@ void update_accel(float x, float y, float z)
 	// Draw the value of y
 	sd1306_draw_string(sizeof(str_az) * 6, OLED_LINE_2_Y, string_data, FONT_SIZE_LINE, white_pixel);
 	// Draw the units of y
-	sd1306_draw_string(sizeof(str_ay) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_2_Y, "g", FONT_SIZE_LINE, white_pixel);
+	sd1306_draw_string((int32_t)sizeof(str_ay) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_2_Y, "g", FONT_SIZE_LINE, white_pixel);
 
 	// Convert z value to string
 	ftoa(z, string_data, 2);
@@ -407,7 +407,7 @@ void update_accel(float x, float y, float z)
 	// Draw the value of z
 	sd1306_draw_string(sizeof(str_az) * 6, OLED_LINE_3_Y, string_data, FONT_SIZE_LINE, white_pixel);
 	// Draw the units of z
-	sd1306_draw_string(sizeof(str_az) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_3_Y, "g", FONT_SIZE_LINE, white_pixel);
+	sd1306_draw_string((int32_t)sizeof(str_az) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_3_Y, "g", FONT_SIZE_LINE, white_pixel);
 
 	// Send the buffer to OLED RAM
 	sd1306_refresh();
@@ -443,7 +443,7 @@ void update_angular_rate(float x, float y, float z)
 	// Draw the value of x
 	sd1306_draw_string(sizeof(str_gx) * 6, OLED_LINE_1_Y, string_data, FONT_SIZE_LINE, white_pixel);
 	// Draw the units of x
-	sd1306_draw_string(sizeof(str_gx) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_1_Y, "dps", FONT_SIZE_LINE, white_pixel);
+	sd1306_draw_string((int32_t)sizeof(str_gx) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_1_Y, "dps", FONT_SIZE_LINE, white_pixel);
 
 	// Convert y value to string
 	ftoa(y, string_data, 2);
@@ -453,7 +453,7 @@ void update_angular_rate(float x, float y, float z)
 	// Draw the value of y
 	sd1306_draw_string(sizeof(str_gy) * 6, OLED_LINE_2_Y, string_data, FONT_SIZE_LINE, white_pixel);
 	// Draw the units of y
-	sd1306_draw_string(sizeof(str_gy) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_2_Y, "dps", FONT_SIZE_LINE, white_pixel);
+	sd1306_draw_string((int32_t)sizeof(str_gy) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_2_Y, "dps", FONT_SIZE_LINE, white_pixel);
 	
 	// Convert z value to string
 	ftoa(z, string_data, 2);
@@ -463,7 +463,7 @@ void update_angular_rate(float x, float y, float z)
 	// Draw the value of z
 	sd1306_draw_string(sizeof(str_gz) * 6, OLED_LINE_3_Y, string_data, FONT_SIZE_LINE, white_pixel);
 	// Draw the units of z
-	sd1306_draw_string(sizeof(str_gz) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_3_Y, "dps", FONT_SIZE_LINE, white_pixel);
+	sd1306_draw_string((int32_t)sizeof(str_gz) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_3_Y, "dps", FONT_SIZE_LINE, white_pixel);
 
 	// Send the buffer to OLED RAM
 	sd1306_refresh();
@@ -500,7 +500,7 @@ void update_environ(float temp1, float temp2, float atm)
 	// Draw the value of temp1
 	sd1306_draw_string(sizeof(str_temp1) * 6, OLED_LINE_1_Y, string_data, FONT_SIZE_LINE, white_pixel);
 	// Draw the units of temp1
-	sd1306_draw_string(sizeof(str_temp1) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_1_Y, "C", FONT_SIZE_LINE, white_pixel);
+	sd1306_draw_string((int32_t)sizeof(str_temp1) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_1_Y, "C", FONT_SIZE_LINE, white_pixel);
 
 	// Convert temp2 value to string
 	ftoa(temp2, string_data, 2);
@@ -510,7 +510,7 @@ void update_environ(float temp1, float temp2, float atm)
 	// Draw the value of temp2
 	sd1306_draw_string(sizeof(str_temp2) * 6, OLED_LINE_2_Y, string_data, FONT_SIZE_LINE, white_pixel);
 	// Draw the value of temp2
-	sd1306_draw_string(sizeof(str_temp2) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_2_Y, "C", FONT_SIZE_LINE, white_pixel);
+	sd1306_draw_string((int32_t)sizeof(str_temp2) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_2_Y, "C", FONT_SIZE_LINE, white_pixel);
 
 	// Convert atm value to string
 	ftoa(atm, string_data, 2);
@@ -520,7 +520,7 @@ void update_environ(float temp1, float temp2, float atm)
 	// Draw the value of atm
 	sd1306_draw_string(sizeof(str_atm) * 6, OLED_LINE_3_Y, string_data, FONT_SIZE_LINE, white_pixel);
 	// Draw the units of atm
-	sd1306_draw_string(sizeof(str_atm) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_3_Y, "kPa", FONT_SIZE_LINE, white_pixel);
+	sd1306_draw_string((int32_t)sizeof(str_atm) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_3_Y, "kPa", FONT_SIZE_LINE, white_pixel);
 
 	// Convert altitude value to string
 	ftoa(altitude, string_data, 2);
@@ -530,7 +530,7 @@ void update_environ(float temp1, float temp2, float atm)
 	// Draw the value of altitude
 	sd1306_draw_string(sizeof(str_altitude) * 6, OLED_LINE_4_Y, string_data, FONT_SIZE_LINE, white_pixel);
 	// Draw the units of altitude
-	sd1306_draw_string(sizeof(str_altitude) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_4_Y, "m", FONT_SIZE_LINE, white_pixel);
+	sd1306_draw_string((int32_t)sizeof(str_altitude) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_4_Y, "m", FONT_SIZE_LINE, white_pixel);
 
 	// Send the buffer to OLED RAM
 	sd1306_refresh();
@@ -559,7 +559,7 @@ void update_airquality(uint16_t co2, uint8_t year, uint8_t month, uint8_t day)
 	// Draw the value of x
 	sd1306_draw_string(sizeof(str_co2) * 6, OLED_LINE_1_Y, string_data, FONT_SIZE_LINE, white_pixel);
 	// Draw the units of x
-	sd1306_draw_string(sizeof(str_co2) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_1_Y, "ppm", FONT_SIZE_LINE, white_pixel);
+	sd1306_draw_string((int32_t)sizeof(str_co2) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_1_Y, "ppm", FONT_SIZE_LINE, white_pixel);
 
 	intToStr(year, string_data, 2);
 
@@ -603,7 +603,7 @@ void update_other(float x, float y, float z)
 	// Draw the value of x
 	sd1306_draw_string(sizeof(str_light) * 6, OLED_LINE_1_Y, string_data, FONT_SIZE_LINE, white_pixel);
 	// Draw the units of x
-	sd1306_draw_string(sizeof(str_light) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_1_Y, "Lux", FONT_SIZE_LINE, white_pixel);
+	sd1306_draw_string((int32_t)sizeof(str_light) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_1_Y, "Lux", FONT_SIZE_LINE, white_pixel);
 
 	// Convert y value to string
 	ftoa(y, string_data, 2);
@@ -613,7 +613,7 @@ void update_other(float x, float y, float z)
 	// Draw the value of y
 	sd1306_draw_string(sizeof(str_tbd1) * 6, OLED_LINE_2_Y, string_data, FONT_SIZE_LINE, white_pixel);
 	// Draw the units of y
-	sd1306_draw_string(sizeof(str_tbd1) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_2_Y, "Units", FONT_SIZE_LINE, white_pixel);
+	sd1306_draw_string((int32_t)sizeof(str_tbd1) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_2_Y, "Units", FONT_SIZE_LINE, white_pixel);
 
 	// Convert z value to string
 	ftoa(z, string_data, 2);
@@ -623,7 +623,7 @@ void update_other(float x, float y, float z)
 	// Draw the value of z
 	sd1306_draw_string(sizeof(str_tbd2) * 6, OLED_LINE_3_Y, string_data, FONT_SIZE_LINE, white_pixel);
 	// Draw the units of z
-	sd1306_draw_string(sizeof(str_tbd2) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_3_Y, "Units", FONT_SIZE_LINE, white_pixel);
+	sd1306_draw_string((int32_t)sizeof(str_tbd2) * 6 + (get_str_size(string_data) + 1) * 6, OLED_LINE_3_Y, "Units", FONT_SIZE_LINE, white_pixel);
 
 	// Send the buffer to OLED RAM
 	sd1306_refresh();
@@ -654,7 +654,7 @@ static void reverse(uint8_t *str, int32_t len)
 	{
 		temp = str[i];
 		str[i] = str[j];
-		str[j] = temp;
+		str[j] = (uint8_t)temp;
 		i++; j--;
 	}
 }
@@ -678,7 +678,7 @@ int32_t intToStr(int32_t x, uint8_t str[], int32_t d)
 	}
 	while (x)
 	{
-		str[i++] = (x % 10) + '0';
+		str[i++] = (uint8_t)(x % 10 + '0');
 		x = x / 10;
 	}
 
@@ -746,7 +746,7 @@ void ftoa(float n, uint8_t *res, int32_t afterpoint)
 		// Get the value of fraction part upto given no. 
 		// of points after dot. The third parameter is needed 
 		// to handle cases like 233.007 
-		fpart = fpart * pow(10, afterpoint);
+		fpart = fpart * (float)pow(10, afterpoint);
 
 		intToStr((int32_t)fpart, res + i + 1, afterpoint);
 	}
@@ -825,5 +825,5 @@ const unsigned char Image_avnet_bmp[BUFFER_SIZE] =
 
 uint8_t get_str_size(uint8_t * str)
 {
-	return strlen(str);
+	return (uint8_t)strlen(str);
 }
