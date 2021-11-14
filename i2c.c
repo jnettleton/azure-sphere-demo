@@ -591,7 +591,10 @@ void lp_imu_initialize(void)
     const airquality7_err_t result = airquality7_get_revision(&airquality7_rev_year, &airquality7_rev_month, &airquality7_rev_day, &airquality7_rev_ascii_code);
     if (result != AIRQUALITY7_ERR_OK)
     {
-        Log_Debug("ERROR: Airquality7 get revision: %s (%d).\n", strerror(errno), errno);
+        if (result == AIRQUALITY7_ERR_CRC)
+            Log_Debug("ERROR: Airquality7 get revision: CRC error.\n");
+        else
+            Log_Debug("ERROR: Airquality7 get revision: %s (%d).\n", strerror(errno), errno);
     }
 #endif
 
@@ -621,8 +624,8 @@ static void CloseFdPrintError(int fd, const char *fdName)
 /// </summary>
 void lp_imu_close(void)
 {
-    CloseFdPrintError(i2cIsu2Fd, "i2c");
-    CloseFdPrintError(i2cIsu1Fd, "i2c");
+    CloseFdPrintError(i2cIsu2Fd, "i2c ISU2");
+    CloseFdPrintError(i2cIsu1Fd, "i2c ISU1");
 }
 
 /*
