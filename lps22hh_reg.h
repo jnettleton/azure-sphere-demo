@@ -132,6 +132,7 @@ typedef struct {
   */
 
 #define LPS22HH_INTERRUPT_CFG                   0x0BU
+#pragma pack(1)
 typedef struct {
   uint8_t pe                              : 2;  /* ple + phe */
   uint8_t lir                             : 1;
@@ -143,17 +144,20 @@ typedef struct {
 } lps22hh_interrupt_cfg_t;
 
 #define LPS22HH_THS_P_L                         0x0CU
+#pragma pack(1)
 typedef struct {
   uint8_t ths                             : 8;
 } lps22hh_ths_p_l_t;
 
 #define LPS22HH_THS_P_H                         0x0DU
+#pragma pack(1)
 typedef struct {
   uint8_t ths                             : 7;
   uint8_t not_used_01                     : 1;
 } lps22hh_ths_p_h_t;
 
 #define LPS22HH_IF_CTRL                         0x0EU
+#pragma pack(1)
 typedef struct {
   uint8_t i2c_disable                     : 1;
   uint8_t i3c_disable                     : 1;
@@ -166,6 +170,7 @@ typedef struct {
 
 #define LPS22HH_WHO_AM_I                        0x0FU
 #define LPS22HH_CTRL_REG1                       0x10U
+#pragma pack(1)
 typedef struct {
   uint8_t sim                             : 1;
   uint8_t bdu                             : 1;
@@ -175,6 +180,7 @@ typedef struct {
 } lps22hh_ctrl_reg1_t;
 
 #define LPS22HH_CTRL_REG2                       0x11U
+#pragma pack(1)
 typedef struct {
   uint8_t one_shot                        : 1;
   uint8_t low_noise_en                    : 1;
@@ -187,6 +193,7 @@ typedef struct {
 } lps22hh_ctrl_reg2_t;
 
 #define LPS22HH_CTRL_REG3                       0x12U
+#pragma pack(1)
 typedef struct {
   uint8_t int_s                           : 2;
   uint8_t drdy                            : 1;
