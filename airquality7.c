@@ -1,5 +1,6 @@
 #include "airquality7.h"
 
+// forward references
 static void airquality7_communication_delay( void );
 static airquality7_err_t airquality7_get_crc( uint8_t *data_in, uint8_t data_size );
 
@@ -10,7 +11,6 @@ uint8_t airquality7_addr = AIRQUALITY7_DEV_ADDR;
 
 int32_t airquality7_generic_write(uint8_t *data_buf)
 {  
-    //airquality7_communication_delay();
     return I2CMaster_Write(i2cIsu2Fd, airquality7_addr, data_buf, 6);
 }
 
@@ -169,9 +169,6 @@ airquality7_err_t airquality7_get_r0_calib(uint16_t *r0_kohm)
 
     if (r0_kohm != AIRQUALITY7_NULL)
     {
-        //*r0_kohm = tmp_data[1];
-        //*r0_kohm = (uint16_t)(*r0_kohm << 8);
-        //*r0_kohm = (uint16_t)(*r0_kohm | tmp_data[0]);
         *r0_kohm = (uint16_t)((tmp_data[1] << 8) | tmp_data[0]);
     }
 
@@ -182,10 +179,6 @@ airquality7_err_t airquality7_get_r0_calib(uint16_t *r0_kohm)
 
 static void airquality7_communication_delay( void )
 {
-//   uint32_t ms = DELAY_MS;
-//   struct timespec ts;
-//   ts.tv_sec = (long int)(ms / 1000u);
-//   ts.tv_nsec = (long int)((ms - ((long unsigned int)ts.tv_sec * 1000u)) * 1000000u);
     struct timespec ts = { 0 };
     ts.tv_nsec = INTERVAL_MS;
 
