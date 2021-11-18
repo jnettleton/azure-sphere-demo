@@ -195,9 +195,5 @@ static uint8_t airquality7_get_crc( uint8_t *data_in, uint8_t data_size )
         data_in++;
     }
     
-    uint8_t crc = (uint8_t)sum;
-    crc = (uint8_t)(crc + sum / 0x0100);
-    crc = (uint8_t)~crc;
-
-    return crc;
+    return (uint8_t)~(sum % 0x0100 + sum / 0x0100);
 }
