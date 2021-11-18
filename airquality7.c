@@ -17,7 +17,7 @@ int32_t airquality7_generic_write(uint8_t *data_buf)
 int32_t airquality7_generic_read(uint8_t *data_buf)
 {
     airquality7_communication_delay();
-    return I2CMaster_Write(i2cIsu2Fd, airquality7_addr, data_buf, 7);
+    return I2CMaster_Read(i2cIsu2Fd, airquality7_addr, data_buf, 7);
 }
 
 //int32_t airquality7_generic_write_then_read(uint8_t* write_buf, uint8_t* read_buf)
@@ -49,7 +49,7 @@ airquality7_err_t airquality7_get_status(uint16_t *tvoc_ppb,
     uint8_t tmp_data[7] = { AIRQUALITY7_DUMMY };
     uint8_t write_data[6] = { AIRQUALITY7_DUMMY };
     write_data[0] = AIRQUALITY7_CMD_GET_STATUS;
-    write_data[5] = airquality7_get_crc(tmp_data, 5);
+    write_data[5] = airquality7_get_crc(write_data, 5);
 
 #if true
     int32_t exitCode = airquality7_generic_write(write_data);
@@ -213,19 +213,17 @@ static void airquality7_communication_delay( void )
 
 static uint8_t airquality7_get_crc( uint8_t *data_in, uint8_t data_size )
 {
-    int32_t crc = 0;
-    uint8_t cnt = 0x00;
     int32_t sum = 0;
  
-    for (cnt = 0; cnt < data_size; cnt++)
+    for (uint8_t cnt = 0; cnt < data_size; cnt++)
     {
         sum += *data_in;
         data_in++;
     }
     
-    crc = sum % 0x0100;
+    uint8_t crc = (uint8_t)sum; // % 0x0100;
     crc += sum / 0x0100;
     crc = ~crc;
 
-    return (uint8_t)crc;
+    return crc;
 }
