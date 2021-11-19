@@ -271,13 +271,16 @@ static void ReadSensorTimerEventHandler(EventLoopTimer* timer)
     }
 
 #ifdef CLICK_AIRQUALITY7
-    const airquality7_err_t result = lp_get_click_air_quality();
-    if (result == AIRQUALITY7_ERR_OK)
+    if (airquality7_found) // updated in airquality7_get_revision()
     {
-        Log_Debug("AIRQUALITY: CO2            [ppm]: %d\n", airquality7_co2_ppm);
-        Log_Debug("AIRQUALITY: tVOC           [ppb]: %d\n", airquality7_tvoc_ppb);
-        Log_Debug("AIRQUALITY: Resistor Value [ohm]: %d\n", airquality7_res_val_ohm);
-        Log_Debug("AIRQUALITY: Revision    [m/d/yy]: %d/%d/%d\n", airquality7_rev_month, airquality7_rev_day, airquality7_rev_year);
+        const airquality7_err_t result = lp_get_click_air_quality();
+        if (result == AIRQUALITY7_ERR_OK)
+        {
+            Log_Debug("AIRQUALITY7: CO2            [ppm]: %d\n", airquality7_co2_ppm);
+            Log_Debug("AIRQUALITY7: tVOC           [ppb]: %d\n", airquality7_tvoc_ppb);
+            Log_Debug("AIRQUALITY7: Resistor Value [ohm]: %d\n", airquality7_res_val_ohm);
+            Log_Debug("AIRQUALITY7: Revision    [m/d/yy]: %d/%d/%d\n", airquality7_rev_month, airquality7_rev_day, airquality7_rev_year);
+        }
     }
 #endif
 
@@ -618,8 +621,6 @@ int main(void)
 
     ReadWifiConfig(true);
 
-	exitCode = InitPeripheralsAndHandlers();
-
     const int fdRed = GPIO_OpenAsOutput(SAMPLE_RGBLED_RED, GPIO_OutputMode_PushPull, GPIO_Value_High);
     if (fdRed < 0) {
         Log_Debug("Error opening GPIO: %s (%d). Check that app_manifest.json includes the GPIO used.\n", strerror(errno), errno);
@@ -655,7 +656,9 @@ int main(void)
     //    nanosleep(&sleepTime, NULL);
     //}
 
-	// Main loop
+    exitCode = InitPeripheralsAndHandlers();
+
+    // Main loop
 	while (exitCode == ExitCode_Success)
     {
         //GPIO_SetValue(fdRed, GPIO_Value_Low);

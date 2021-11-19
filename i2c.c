@@ -589,12 +589,14 @@ void lp_imu_initialize(void)
 
 #ifdef CLICK_AIRQUALITY7
     const airquality7_err_t result = airquality7_get_revision(&airquality7_rev_year, &airquality7_rev_month, &airquality7_rev_day, &airquality7_rev_ascii_code);
-    if (result != AIRQUALITY7_ERR_OK)
+    if (result == AIRQUALITY7_ERR_OK)
     {
+        Log_Debug("AIRQUALITY7 found!\n");
+    } else {
         if (result == AIRQUALITY7_ERR_CRC)
-            Log_Debug("ERROR: Airquality7 get revision: CRC error.\n");
+            Log_Debug("ERROR: AIRQUALITY7 get revision: CRC error.\n");
         else
-            Log_Debug("ERROR: Airquality7 get revision: %s (%d).\n", strerror(errno), errno);
+            Log_Debug("ERROR: AIRQUALITY7 get revision: %s (%d).\n", strerror(errno), errno);
     }
 #endif
 

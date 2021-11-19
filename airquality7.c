@@ -8,6 +8,7 @@ static airquality7_err_t airquality7_get_crc( uint8_t *data_in, uint8_t data_siz
 const long INTERVAL_MS = 100 * NANO_SECOND_MULTIPLIER; 
 
 uint8_t airquality7_addr = AIRQUALITY7_DEV_ADDR;
+bool airquality7_found = false;
 
 int32_t airquality7_generic_write(uint8_t *data_buf)
 {  
@@ -121,6 +122,8 @@ airquality7_err_t airquality7_get_revision(uint8_t *year,
 
     exitCode = airquality7_generic_read(tmp_data);
     if (exitCode < 0) return AIRQUALITY7_ERR_READ;
+
+    airquality7_found = true;
 
     uint8_t crc_calc = airquality7_get_crc(tmp_data, 6);
     if (crc_calc != tmp_data[6])

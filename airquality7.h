@@ -36,6 +36,8 @@
 extern "C"{
 #endif
 
+extern bool airquality7_found;
+
 /**
  * @brief Generic write function.
  *
