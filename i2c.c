@@ -402,7 +402,6 @@ void lp_calibrate_angular_rate(void)
     // Read the raw angular rate data from the device to use as offsets.  We're making the
     // assumption that the device is stationary.
 
-    uint8_t reg;
 
     Log_Debug("LSM6DSO: Calibrating angular rate . . .\n");
     Log_Debug("LSM6DSO: Please make sure the device is stationary.\n");
@@ -410,6 +409,7 @@ void lp_calibrate_angular_rate(void)
     do {
 
         // Delay and read the device until we have data!
+        uint8_t reg = 0;
         do {
             // Read the calibration values
             platform_delay(500);
@@ -589,8 +589,7 @@ void lp_imu_initialize(void)
 
 #ifdef CLICK_AIRQUALITY7
     const airquality7_err_t result = airquality7_get_revision(&airquality7_rev_year, &airquality7_rev_month, &airquality7_rev_day, &airquality7_rev_ascii_code);
-    if (result == AIRQUALITY7_ERR_OK)
-    {
+    if (result == AIRQUALITY7_ERR_OK) {
         Log_Debug("AIRQUALITY7 found!\n");
     } else {
         if (result == AIRQUALITY7_ERR_CRC)
@@ -599,10 +598,6 @@ void lp_imu_initialize(void)
             Log_Debug("ERROR: AIRQUALITY7 get revision: %s (%d).\n", strerror(errno), errno);
     }
 #endif
-
-    // read_imu();
-
-    /* Read samples in polling mode (no int) */
 }
 
 /// <summary>
