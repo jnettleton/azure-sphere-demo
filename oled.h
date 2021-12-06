@@ -123,7 +123,7 @@ void update_accel(float x, float y, float z);
 void update_angular_rate(float x, float y, float z);
 void update_environ(float temp1, float temp2, float atm);
 #ifdef CLICK_AIRQUALITY7
-void update_airquality(uint16_t co2, uint8_t year, uint8_t month, uint8_t day);
+void update_airquality(uint16_t co2, uint16_t tvoc, uint8_t year, uint8_t month, uint8_t day);
 #endif
 void update_other(float x, float y, float z);
 
