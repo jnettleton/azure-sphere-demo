@@ -15,7 +15,7 @@
 #include "lps22hh_reg.h"
 #include "oled.h"
 #ifdef CLICK_AIRQUALITY7
-#include "airquality7.h"
+#include "click-airquality7.h"
 #endif
 
 #define LSM6DSO_ADDRESS 0x6A // I2C Address

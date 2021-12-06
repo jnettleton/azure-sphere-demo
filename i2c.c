@@ -61,7 +61,7 @@ Acknowledgment: Built from ST Micro samples
 
 #include "i2c.h"
 #ifdef CLICK_AIRQUALITY7
-#include "airquality7.h"
+#include "click-airquality7.h"
 #endif
 
 typedef union {

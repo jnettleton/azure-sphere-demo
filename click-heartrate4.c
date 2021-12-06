@@ -27,7 +27,7 @@
  *
  */
 
-#include "heartrate4.h"
+#include "click-heartrate4.h"
 
 bool heartrate7_found;
 

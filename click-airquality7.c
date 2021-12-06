@@ -1,4 +1,4 @@
-#include "airquality7.h"
+#include "click-airquality7.h"
 
 // forward references
 static void airquality7_communication_delay( void );
