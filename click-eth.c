@@ -1,3 +1,3 @@
-#include "click-heartrate4.h"
+#include "click-eth.h"
 
 bool eth_found;
