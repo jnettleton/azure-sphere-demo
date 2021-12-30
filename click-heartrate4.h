@@ -35,9 +35,11 @@
 #ifndef HEARTRATE4_H
 #define HEARTRATE4_H
 
+// https://github.com/MikroElektronika/mikrosdk_click_v2/tree/master/clicks/heartrate4
+
 #include "i2c.h"
 
-extern bool heartrate7_found;
+extern bool heartrate4_found;
 
 
 // -------------------------------------------------------------- PUBLIC MACROS 
@@ -660,7 +662,7 @@ void heartrate4_set_registers(heartrate4_set_registers_t *registers);
 #ifdef __cplusplus
 }
 #endif
-#endif  // _HEARTRATE4_H_
+#endif  // _HEARTRATE7_H_
 
 /** \} */ // End public_function group
 /// \}    // End click Driver group  

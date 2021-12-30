@@ -27,9 +27,11 @@
  *
  */
 
+// https://github.com/MikroElektronika/mikrosdk_click_v2/tree/master/clicks/heartrate4
+
 #include "click-heartrate4.h"
 
-bool heartrate7_found;
+bool heartrate4_found;
 
 void heartrate4_default_cfg(void)
 {
