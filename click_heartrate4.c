@@ -29,7 +29,7 @@
 
 // https://github.com/MikroElektronika/mikrosdk_click_v2/tree/master/clicks/heartrate4
 
-#include "click-heartrate4.h"
+#include "click_heartrate4.h"
 
 bool heartrate4_found;
 

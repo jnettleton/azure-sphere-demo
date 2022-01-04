@@ -17,8 +17,8 @@ add_executable (${PROJECT_NAME} main.c
 				sd1306.c 
 				eventloop_timer_utilities.c
 				oled.c
-				click-airquality7.c click-heartrate4.c click-eth.c click-zigbee.c click-gps4.c click-nfc4.c
-				avnet-ble51.c)
+				click_airquality7.c click_heartrate4.c click_eth.c click_zigbee.c click_gps4.c click_nfc4.c
+				avnet_ble51.c azure_iothub.c)
 				# "HardwareDefinitions/avnet_mt3620_sk_rev2/inc/hw/demo_appliance.h" "lps22hh_reg.h" "lsm6dso_reg.h" "i2c.h" "build_options.h" "oled.h" "sd1306.h" "eventloop_timer_utilities.h" "exit_codes.h")
 
 # target_include_directories(${PROJECT_NAME} PRIVATE ${SPHERE_INCLUDE_DIR})

@@ -25,7 +25,7 @@
 // Define to build for Avnet's IoT Connect platform
 //#define USE_IOT_CONNECT
 
-// If this is a IoT Conect build, make sure to enable the IOT Hub application code
+// If this is a IoT Connect build, make sure to enable the IOT Hub application code
 #ifdef USE_IOT_CONNECT
 #define IOT_HUB_APPLICATION
 #endif 
