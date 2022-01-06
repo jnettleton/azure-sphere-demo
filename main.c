@@ -17,11 +17,16 @@
 #include <applibs/i2c.h>
 #include <applibs/powermanagement.h>
 
+#include "build_options.h"
 #include "i2c.h"
 #include "oled.h"
 //#include "sd1306.h"
 #include "eventloop_timer_utilities.h"
 #include "exit_codes.h"
+
+#if defined(CLICK_ZIGBEE_HOST) || defined(CLICK_ZIGBEE_USER)
+#include "click_zigbee.h"
+#endif
 
 #define JSON_BUFFER_SIZE 512
 
@@ -156,9 +161,7 @@ static void ButtonPollTimerEventHandler(EventLoopTimer* timer)
 #ifdef IOT_HUB_APPLICATION    		
             sendTelemetryButtonA = true;
 #endif             
-
         }
-
     }
 
     // If the B button has just been pressed/released, send a telemetry message
@@ -187,12 +190,10 @@ static void ButtonPollTimerEventHandler(EventLoopTimer* timer)
 #ifdef IOT_HUB_APPLICATION    		
             sendTelemetryButtonB = true;
 #endif             
-
         }
     }
 
 #ifdef IOT_HUB_APPLICATION    	
-
     // If either button was pressed, then enter the code to send the telemetry message
     if (sendTelemetryButtonA || sendTelemetryButtonB) {
 
@@ -210,7 +211,6 @@ static void ButtonPollTimerEventHandler(EventLoopTimer* timer)
         if (sendTelemetryButtonB) {
             // construct the telemetry message for Button B
             snprintf(pjsonBuffer, JSON_BUFFER_SIZE, cstrDeviceTwinJsonInteger, "buttonB", !buttonBState);
-
         }
 
         Log_Debug("\n[Info] Sending telemetry %s\n", pjsonBuffer);
@@ -391,6 +391,10 @@ static ExitCode InitPeripheralsAndHandlers(void)
         Log_Debug("ERROR: Could not open SAMPLE_BUTTON_2: %s (%d).\n", strerror(errno), errno);
         return ExitCode_Init_ButtonB;
     }
+
+#if defined(CLICK_ZIGBEE_HOST) || defined(CLICK_ZIGBEE_USER)
+    zigbee_open();
+#endif
 
     // Set up a timer to poll for button events.
     static const struct timespec buttonPressCheckPeriod = { .tv_sec = 0, .tv_nsec = 1000 * 1000 };

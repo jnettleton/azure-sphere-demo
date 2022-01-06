@@ -40,10 +40,10 @@
         //{"Name": "SAMPLE_OLED_SDA", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_GPIO38", "Comment": "MT3620 SK: OLED SDA."},
 
         {"Name": "SAMPLE_CLICK1_I2C", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_ISU2_I2C", "Comment": "MT3620 SK: CLICK 1 ISU2."},
-        {"Name": "SAMPLE_CLICK1_SCL", "Type": "Gpio", "Mapping": "AVNET_MT3620_SK_GPIO37", "Comment": "MT3620 SK: CLICK 1 SLC."},
-        {"Name": "SAMPLE_CLICK1_SDA", "Type": "Gpio", "Mapping": "AVNET_MT3620_SK_GPIO38", "Comment": "MT3620 SK: CLICK 1 SDA."},
+        //{"Name": "SAMPLE_CLICK1_SCL", "Type": "Gpio", "Mapping": "AVNET_MT3620_SK_GPIO37", "Comment": "MT3620 SK: CLICK 1 SLC."},
+        //{"Name": "SAMPLE_CLICK1_SDA", "Type": "Gpio", "Mapping": "AVNET_MT3620_SK_GPIO38", "Comment": "MT3620 SK: CLICK 1 SDA."},
 
-        {"Name": "SAMPLE_CLICK2_I2C", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_ISU2_I2C", "Comment": "MT3620 SK: CLICK 2 ISU2."}
+        {"Name": "SAMPLE_CLICK2_I2C", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_ISU2_I2C", "Comment": "MT3620 SK: CLICK 2 ISU2."},
         //{"Name": "SAMPLE_CLICK2_SCL", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_GPIO37", "Comment": "MT3620 SK: CLICK 2 SLC."},
         //{"Name": "SAMPLE_CLICK2_SDA", "Type": "I2cMaster", "Mapping": "AVNET_MT3620_SK_GPIO38", "Comment": "MT3620 SK: CLICK 2 SDA."}
 
@@ -51,5 +51,8 @@
         //{"Name": "SAMPLE_PMOD_PIN7", "Type": "Gpio", "Mapping": "AVNET_MT3620_SK_GPIO39", "Comment": "Pin7 on the PMOD connector"},
         //{"Name": "SAMPLE_PMOD_PIN8", "Type": "Gpio", "Mapping": "AVNET_MT3620_SK_GPIO35", "Comment": "Pin8 on the PMOD connector"},
         //{"Name": "SAMPLE_PMOD_PIN9", "Type": "Gpio", "Mapping": "AVNET_MT3620_SK_GPIO1", "Comment": "Pin9 on the PMOD connector"},
+
+        {"Name": "SAMPLE_CLICK1_UART", "Type": "Uart", "Mapping": "AVNET_MT3620_SK_ISU0_UART", "Comment": "ISU0 UART is exposed on CLICK1"}
+        //{"Name": "SAMPLE_CLICK2_UART", "Type": "Uart", "Mapping": "AVNET_MT3620_SK_ISU1_UART", "Comment": "ISU1 UART is exposed on CLICK2"}
     ]
 }

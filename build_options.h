@@ -41,6 +41,11 @@
 // https://www.mikroe.com/air-quality-7-click
 #define CLICK_AIRQUALITY7
 
+// Mikroe CLICK Module - ZigBee
+// https://www.mikroe.com/air-quality-7-click
+//#define CLICK_ZIGBEE_HOST
+#define CLICK_ZIGBEE_USER
+
 // Include Intercore Communication code
 // This will enable reading the ALST19 light sensor data from the M4 application
 // To exercise the inter-core communication code run the M4 application first

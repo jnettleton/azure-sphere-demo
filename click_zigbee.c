@@ -3,6 +3,10 @@
 
 #include "click_zigbee.h"
 
+//#include <fcntl.h>
+#include <unistd.h>
+
+
 bool zigbee_found;
 
 //static inline void UART_InitConfig(UART_Config* uartConfig);
@@ -22,6 +26,46 @@ char AT_BCAST_MSG[15] = ":00,MikroE";
 char AT_HOST_CFG1[10] = "00=6314";
 char AT_HOST_CFG2[20] = "0A=0914;password";
 char AT_HOST_CFG3[50] = "09=5A6967426565416C6C69616E63653039;password";
+
+int zigbee_uart_fd = -1;
+UART_Id zigbee_uart_id = 0;
+
+UART_Config zigbee_uart_config = {
+    .blockingMode = UART_BlockingMode_NonBlocking,
+    .baudRate = 115200,
+    .dataBits = UART_DataBits_Eight,
+    .parity = UART_Parity_None,
+    .stopBits = UART_StopBits_One,
+    .flowControl = UART_FlowControl_RTSCTS
+};
+
+void zigbee_open(void)
+{
+    zigbee_uart_id = SAMPLE_CLICK1_UART;
+    UART_InitConfig(&zigbee_uart_config);
+    zigbee_uart_fd = UART_Open(zigbee_uart_id, &zigbee_uart_config);
+}
+
+void zigbee_close(void)
+{
+    if (zigbee_uart_fd >= 0)
+    {
+        close(zigbee_uart_fd);
+        zigbee_uart_fd = -1;
+    }
+}
+
+size_t zigbee_read(char *buffer, size_t size)
+{
+    //ssize_t read(int, void*, size_t);
+    return read(zigbee_uart_fd, buffer, size);
+}
+
+size_t zigbee_write(const char *buffer, size_t size)
+{
+    //ssize_t write(int, const void*, size_t);
+    return write(zigbee_uart_fd, buffer, size);
+}
 
 //void log_write(uint8_t* str_buf, uint8_t str_type)
 //{
