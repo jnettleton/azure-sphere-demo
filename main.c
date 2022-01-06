@@ -392,7 +392,7 @@ static ExitCode InitPeripheralsAndHandlers(void)
         return ExitCode_Init_ButtonB;
     }
 
-#if defined(CLICK_ZIGBEE_HOST) || defined(CLICK_ZIGBEE_USER)
+#if defined(CLICK_ZIGBEE_USER)
     zigbee_open();
 #endif
 

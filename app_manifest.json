@@ -12,7 +12,7 @@
       "$SAMPLE_BUTTON_1",
       "$SAMPLE_BUTTON_2"
     ],
-    "I2cMaster": [ "$AVNET_MT3620_SK_ISU1_I2C" ],
+    "I2cMaster": [ "$SAMPLE_CLICK2_I2C" ],
     "Uart": [ "$SAMPLE_CLICK1_UART" ],
     "AllowedApplicationConnections": []
   },
