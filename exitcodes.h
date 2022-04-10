@@ -1,5 +1,7 @@
-#ifndef _EXIT_CODES_H
-#define _EXIT_CODES_H
+/* Copyright (c) Microsoft Corporation. All rights reserved.
+   Licensed under the MIT License. */
+
+#pragma once
 
 /// <summary>
 /// Exit codes for this application. These are used for the
@@ -16,6 +18,8 @@ typedef enum {
     ExitCode_ButtonTimer_Consume,
 
     ExitCode_AzureTimer_Consume,
+
+    ExitCode_AzureIoTConnectionTimer_Consume,
 
     ExitCode_Init_EventLoop,
     ExitCode_Init_ButtonA,
@@ -40,6 +44,18 @@ typedef enum {
 
     ExitCode_PayloadSize_TooLarge,
     ExitCode_Init_sensorPollTimer,
+
+    ExitCode_Init_TelemetryTimer,
+    ExitCode_TelemetryTimer_Consume,
+
+    ExitCode_Validate_ConnectionConfig,
+    ExitCode_Connection_CreateTimer,
+    ExitCode_Connection_TimerStart,
+    ExitCode_Connection_TimerConsume,
+    ExitCode_Connection_InitializeClient,
+
+    ExitCode_Init_AzureIoTDoWorkTimer,
+    ExitCode_AzureIoTDoWorkTimer_Consume,
 
     ExitCode_SetGPIO_Failed,
     ExitCode_Button_Telemetry_Malloc_Failed,
@@ -79,4 +95,8 @@ typedef enum {
     ExitCode_Init_RebootTimer,
 } ExitCode;
 
-#endif 
+/// <summary>
+/// Callback type for a function to be invoked when a fatal error with exit code needs to be raised.
+/// </summary>
+/// <param name="exitCode">Exit code representing the failure.</param>
+typedef void (*ExitCode_CallbackType)(ExitCode exitCode);

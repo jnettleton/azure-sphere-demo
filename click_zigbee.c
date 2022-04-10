@@ -55,13 +55,13 @@ void zigbee_close(void)
     }
 }
 
-size_t zigbee_read(char *buffer, size_t size)
+ssize_t zigbee_read(char *buffer, size_t size)
 {
     //ssize_t read(int, void*, size_t);
     return read(zigbee_uart_fd, buffer, size);
 }
 
-size_t zigbee_write(const char *buffer, size_t size)
+ssize_t zigbee_write(const char *buffer, size_t size)
 {
     //ssize_t write(int, const void*, size_t);
     return write(zigbee_uart_fd, buffer, size);

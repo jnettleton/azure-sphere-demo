@@ -22,7 +22,7 @@
 #include "oled.h"
 //#include "sd1306.h"
 #include "eventloop_timer_utilities.h"
-#include "exit_codes.h"
+#include "exitcodes.h"
 
 #if defined(CLICK_ZIGBEE_HOST) || defined(CLICK_ZIGBEE_USER)
 #include "click_zigbee.h"
@@ -659,6 +659,11 @@ int main(void)
     //    GPIO_SetValue(fdBlue, GPIO_Value_High);
     //    nanosleep(&sleepTime, NULL);
     //}
+
+    bool isNetworkingReady = false;
+    if ((Networking_IsNetworkingReady(&isNetworkingReady) == -1) || !isNetworkingReady) {
+        Log_Debug("WARNING: Network is not ready. Device cannot connect until network is ready.\n");
+    }
 
     exitCode = InitPeripheralsAndHandlers();
 

@@ -14,7 +14,9 @@
     ],
     "I2cMaster": [ "$SAMPLE_CLICK2_I2C" ],
     "Uart": [ "$SAMPLE_CLICK1_UART" ],
-    "AllowedApplicationConnections": []
+    //"WifiConfig": false,
+    "AllowedApplicationConnections": [],
+    "AllowedConnections": ["global.azure-devices-provisioning.net"]
   },
   "ApplicationType": "Default"
 }

@@ -2,10 +2,9 @@
    Licensed under the MIT License. */
 
 #pragma once
+
 #include <time.h>
-
 #include <unistd.h>
-
 #include <applibs/eventloop.h>
 
 /// <summary>
@@ -34,8 +33,7 @@ typedef void (*EventLoopTimerHandler)(EventLoopTimer *timer);
 /// <returns>On success, pointer to new EventLoopTimer, which should be disposed of
 /// with <see cref="DisposeEventLoopTimer" />. On failure, returns NULL, with more
 /// information available in errno.</returns>.
-EventLoopTimer *CreateEventLoopPeriodicTimer(EventLoop *eventLoop, EventLoopTimerHandler handler,
-                                             const struct timespec *period);
+EventLoopTimer *CreateEventLoopPeriodicTimer(EventLoop *eventLoop, EventLoopTimerHandler handler, const struct timespec *period);
 
 /// <summary>
 /// Create a disarmed timer. After the timer has been allocated, call

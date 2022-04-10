@@ -36,6 +36,9 @@ float light_sensor;
 // Altitude
 extern float altitude;
 
+#if !defined(CLOUD_MSG_SIZE)
+#define CLOUD_MSG_SIZE 32
+#endif
 #ifdef IOT_HUB_APPLICATION
 // Array with messages from Azure
 extern uint8_t oled_ms1[CLOUD_MSG_SIZE];

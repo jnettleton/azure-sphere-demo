@@ -13,11 +13,9 @@
 
 #include "eventloop_timer_utilities.h"
 
-static int SetTimerPeriod(int timerFd, const struct timespec *initial,
-                          const struct timespec *repeat);
+static int SetTimerPeriod(int timerFd, const struct timespec *initial, const struct timespec *repeat);
 
-static int SetTimerPeriod(int timerFd, const struct timespec *initial,
-                          const struct timespec *repeat)
+static int SetTimerPeriod(int timerFd, const struct timespec *initial, const struct timespec *repeat)
 {
     static const struct timespec nullTimeSpec = {.tv_sec = 0, .tv_nsec = 0};
     struct itimerspec newValue = {.it_value = initial ? *initial : nullTimeSpec,
@@ -46,8 +44,7 @@ static void TimerCallback(EventLoop *el, int fd, EventLoop_IoEvents events, void
     timer->handler(timer);
 }
 
-EventLoopTimer *CreateEventLoopPeriodicTimer(EventLoop *eventLoop, EventLoopTimerHandler handler,
-                                             const struct timespec *period)
+EventLoopTimer *CreateEventLoopPeriodicTimer(EventLoop *eventLoop, EventLoopTimerHandler handler, const struct timespec *period)
 {
     if (handler == NULL) {
         errno = EINVAL;
