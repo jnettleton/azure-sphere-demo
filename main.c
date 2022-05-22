@@ -24,6 +24,12 @@
 #include "eventloop_timer_utilities.h"
 #include "exitcodes.h"
 
+// AzureIoT
+//#include "user_interface.h"
+#include "cloud.h"
+#include "options.h"
+#include "connection.h"
+
 #if defined(CLICK_ZIGBEE_HOST) || defined(CLICK_ZIGBEE_USER)
 #include "click_zigbee.h"
 #endif
@@ -45,43 +51,43 @@ int readSensorPeriod = SENSOR_READ_PERIOD_SECONDS;
 
 #ifdef OLED_SD1306
 static EventLoopTimer* oledUpdateTimer = NULL;
-#endif 
+#endif
 
-#ifdef IOT_HUB_APPLICATION
-static EventLoopTimer* azureTimer = NULL;
-
-// Azure IoT poll periods
-static const int AzureIoTDefaultPollPeriodSeconds = 1;        // poll azure iot every second
-static const int AzureIoTMinReconnectPeriodSeconds = 60;      // back off when reconnecting
-static const int AzureIoTMaxReconnectPeriodSeconds = 10 * 60; // back off limit
-
-static int azureIoTPollPeriodSeconds = -1;
-
-// Declare a timer and handler for the force reboot Direct Method
-EventLoopTimer* rebootDeviceTimer = NULL;
-static void RebootDeviceEventHandler(EventLoopTimer* timer);
-
-#endif // IOT_HUB_APPLICATION
+// #ifdef IOT_HUB_APPLICATION
+// static EventLoopTimer* azureTimer = NULL;
+//
+// // Azure IoT poll periods
+// static const int AzureIoTDefaultPollPeriodSeconds = 1;        // poll azure iot every second
+// static const int AzureIoTMinReconnectPeriodSeconds = 60;      // back off when reconnecting
+// static const int AzureIoTMaxReconnectPeriodSeconds = 10 * 60; // back off limit
+//
+// static int azureIoTPollPeriodSeconds = -1;
+//
+// // Declare a timer and handler for the force reboot Direct Method
+// EventLoopTimer* rebootDeviceTimer = NULL;
+// static void RebootDeviceEventHandler(EventLoopTimer* timer);
+//
+// #endif // IOT_HUB_APPLICATION
 
 // State variables
 static GPIO_Value_Type buttonAState = GPIO_Value_High;
 static GPIO_Value_Type buttonBState = GPIO_Value_High;
 
-#ifdef IOT_HUB_APPLICATION
-// Usage text for command line arguments in application manifest.
-static const char* cmdLineArgsUsageText =
-"DPS connection type: \" CmdArgs \": [\"--ConnectionType\", \"DPS\", \"--ScopeID\", "
-"\"<scope_id>\"]\n"
-#ifdef USE_PNP     
-"PnP connection type: \" CmdArgs \": [\"--ConnectionType\", \"PnP\", \"--ScopeID\", "
-"\"<scope_id>\"]\n"
-#endif     
-"Direction connection type: \" CmdArgs \": [\"--ConnectionType\", \"Direct\", "
-"\"--Hostname\", \"<azureiothub_hostname>\"]\n "
-"IoTEdge connection type: \" CmdArgs \": [\"--ConnectionType\", \"IoTEdge\", "
-"\"--Hostname\", \"<iotedgedevice_hostname>\", \"--IoTEdgeRootCAPath\", "
-"\"certs/<iotedgedevice_cert_name>\"]\n";
-#endif // IOT_HUB_APPLICATION
+// #ifdef IOT_HUB_APPLICATION
+// // Usage text for command line arguments in application manifest.
+// static const char* cmdLineArgsUsageText =
+// "DPS connection type: \" CmdArgs \": [\"--ConnectionType\", \"DPS\", \"--ScopeID\", "
+// "\"<scope_id>\"]\n"
+// #ifdef USE_PNP
+// "PnP connection type: \" CmdArgs \": [\"--ConnectionType\", \"PnP\", \"--ScopeID\", "
+// "\"<scope_id>\"]\n"
+// #endif
+// "Direction connection type: \" CmdArgs \": [\"--ConnectionType\", \"Direct\", "
+// "\"--Hostname\", \"<azureiothub_hostname>\"]\n "
+// "IoTEdge connection type: \" CmdArgs \": [\"--ConnectionType\", \"IoTEdge\", "
+// "\"--Hostname\", \"<iotedgedevice_hostname>\", \"--IoTEdgeRootCAPath\", "
+// "\"certs/<iotedgedevice_cert_name>\"]\n";
+// #endif // IOT_HUB_APPLICATION
 
 // Buttons
 static int buttonAgpioFd = -1;
@@ -112,6 +118,17 @@ static void ClosePeripheralsAndHandlers(void);
 // Termination state
 static volatile sig_atomic_t exitCode = ExitCode_Success;
 
+static void ExitCodeCallbackHandler(ExitCode ec);
+
+// Cloud
+static const char *CloudResultToString(Cloud_Result result);
+static void ConnectionChangedCallbackHandler(bool connected);
+static void CloudTelemetryUploadEnabledChangedCallbackHandler(bool status);
+static void DisplayAlertCallbackHandler(const char *alertMessage);
+
+static bool isConnected = false;
+static const char* serialNumber = "AIRQUALITYMON-001";
+
 /// <summary>
 ///     Signal handler for termination requests. This handler must be async-signal-safe.
 /// </summary>
@@ -126,11 +143,11 @@ static void TerminationHandler(int signalNumber)
 /// </summary>
 static void ButtonPollTimerEventHandler(EventLoopTimer* timer)
 {
-#ifdef IOT_HUB_APPLICATION    
+#ifdef IOT_HUB_APPLICATION
     // Flags used to dertermine if we need to send a telemetry update or not
     bool sendTelemetryButtonA = false;
     bool sendTelemetryButtonB = false;
-#endif     
+#endif
 
     if (ConsumeEventLoopTimerEvent(timer) != 0) {
         exitCode = ExitCode_ButtonTimer_Consume;
@@ -141,9 +158,9 @@ static void ButtonPollTimerEventHandler(EventLoopTimer* timer)
 
         if (buttonAState == GPIO_Value_Low) {
             Log_Debug("Button A pressed!\n");
-#ifdef IOT_HUB_APPLICATION    	    	
+#ifdef IOT_HUB_APPLICATION
             sendTelemetryButtonA = true;
-#endif 
+#endif
 #ifdef OLED_SD1306
             // Use buttonB presses to drive OLED to display the last screen
             oled_state--;
@@ -154,13 +171,13 @@ static void ButtonPollTimerEventHandler(EventLoopTimer* timer)
             }
 
             Log_Debug("OledState: %d\n", oled_state);
-#endif 
+#endif
         }
         else {
             Log_Debug("Button A released!\n");
-#ifdef IOT_HUB_APPLICATION    		
+#ifdef IOT_HUB_APPLICATION
             sendTelemetryButtonA = true;
-#endif             
+#endif
         }
     }
 
@@ -170,9 +187,9 @@ static void ButtonPollTimerEventHandler(EventLoopTimer* timer)
 
         if (buttonBState == GPIO_Value_Low) {
             Log_Debug("Button B pressed!\n");
-#ifdef IOT_HUB_APPLICATION    		
+#ifdef IOT_HUB_APPLICATION
             sendTelemetryButtonB = true;
-#endif             
+#endif
 
 #ifdef OLED_SD1306
             // Use buttonB presses to drive OLED to display the next screen
@@ -183,17 +200,17 @@ static void ButtonPollTimerEventHandler(EventLoopTimer* timer)
                 oled_state = 0;
             }
             Log_Debug("OledState: %d\n", oled_state);
-#endif 
+#endif
         }
         else {
             Log_Debug("Button B released!\n");
-#ifdef IOT_HUB_APPLICATION    		
+#ifdef IOT_HUB_APPLICATION
             sendTelemetryButtonB = true;
-#endif             
+#endif
         }
     }
 
-#ifdef IOT_HUB_APPLICATION    	
+#ifdef IOT_HUB_APPLICATION
     // If either button was pressed, then enter the code to send the telemetry message
     if (sendTelemetryButtonA || sendTelemetryButtonB) {
 
@@ -236,7 +253,7 @@ static void UpdateOledEventHandler(EventLoopTimer* timer)
     update_oled();
 }
 
-#endif 
+#endif
 
 /// <summary>
 ///     Senspr timer event:  Read the sensors
@@ -281,6 +298,24 @@ static void ReadSensorTimerEventHandler(EventLoopTimer* timer)
             Log_Debug("AIRQUALITY7: Resistor Value [ohm]: %d\n", airquality7_res_val_ohm);
             Log_Debug("AIRQUALITY7: Revision    [m/d/yy]: %d/%d/%d\n", airquality7_rev_month, airquality7_rev_day, airquality7_rev_year);
         }
+
+        // Send telemetry to Azure IoT Hub
+        if (isConnected) {
+          time_t now;
+          time(&now);
+
+          static Cloud_Telemetry telemetry = {
+            .co2 = 300.f,
+            .tvoc = 50.f
+          };
+          telemetry.co2 = airquality7_co2_ppm;
+          telemetry.tvoc = airquality7_tvoc_ppb;
+          Cloud_Result result = Cloud_SendTelemetry(&telemetry, now);
+          if (result != Cloud_Result_OK) {
+            Log_Debug("WARNING: Could not send thermometer telemetry to cloud: %s\n",
+                      CloudResultToString(result));
+          }
+        }
     }
 #endif
 
@@ -310,7 +345,7 @@ static void ReadSensorTimerEventHandler(EventLoopTimer* timer)
 #ifdef USE_IOT_CONNECT
     // If we have not completed the IoTConnect connect sequence, then don't send telemetry
     if (IoTCConnected) {
-#endif         
+#endif
 
         // Keep track of the first time through this code.  The LSMD6S0 returns bad data the first time
         // we read it.  Don't send that data up in case we're charting the data.
@@ -347,13 +382,13 @@ static void ReadSensorTimerEventHandler(EventLoopTimer* timer)
             // On the first pass set the OLED screen to the Avnet graphic!
 #ifdef OLED_SD1306
             oled_state = OLED_NUM_SCREEN;
-#endif 
+#endif
 
         }
-#ifdef USE_IOT_CONNECT        
+#ifdef USE_IOT_CONNECT
     }
 #endif // USE_IOT_CONNECT
-#endif // IOT_HUB_APPLICATION    
+#endif // IOT_HUB_APPLICATION
 }
 
 /// <summary>
@@ -410,7 +445,7 @@ static ExitCode InitPeripheralsAndHandlers(void)
     if (oledUpdateTimer == NULL) {
         return ExitCode_Init_OledUpdateTimer;
     }
-#endif 
+#endif
 
     // Iterate across all the device twin items and open any File Descriptors
     //deviceTwinOpenFDs();
@@ -423,31 +458,31 @@ static ExitCode InitPeripheralsAndHandlers(void)
         return ExitCode_Init_sensorPollTimer;
     }
 
-#ifdef IOT_HUB_APPLICATION
-    // Initialize the direct method handler
-    ExitCode result = InitDirectMethods();
-    if (result != ExitCode_Success) {
-        return result;
-    }
+// #ifdef IOT_HUB_APPLICATION
+//     // Initialize the direct method handler
+//     ExitCode result = InitDirectMethods();
+//     if (result != ExitCode_Success) {
+//         return result;
+//     }
+//
+//     azureIoTPollPeriodSeconds = AzureIoTDefaultPollPeriodSeconds;
+//     struct timespec azureTelemetryPeriod = { .tv_sec = azureIoTPollPeriodSeconds, .tv_nsec = 0 };
+//     azureTimer =
+//         CreateEventLoopPeriodicTimer(eventLoop, &AzureTimerEventHandler, &azureTelemetryPeriod);
+//     if (azureTimer == NULL) {
+//         return ExitCode_Init_AzureTimer;
+//     }
+//
+//     // Setup the halt application handler and timer.  This is disarmed and will only fire
+//     // if we receive a halt application direct method call
+//     rebootDeviceTimer = CreateEventLoopDisarmedTimer(eventLoop, RebootDeviceEventHandler);
+// #endif // IOT_HUB_APPLICATION
 
-    azureIoTPollPeriodSeconds = AzureIoTDefaultPollPeriodSeconds;
-    struct timespec azureTelemetryPeriod = { .tv_sec = azureIoTPollPeriodSeconds, .tv_nsec = 0 };
-    azureTimer =
-        CreateEventLoopPeriodicTimer(eventLoop, &AzureTimerEventHandler, &azureTelemetryPeriod);
-    if (azureTimer == NULL) {
-        return ExitCode_Init_AzureTimer;
-    }
-
-    // Setup the halt application handler and timer.  This is disarmed and will only fire
-    // if we receive a halt application direct method call
-    rebootDeviceTimer = CreateEventLoopDisarmedTimer(eventLoop, RebootDeviceEventHandler);
-#endif // IOT_HUB_APPLICATION
-
-#ifdef USE_IOT_CONNECT
-    if (IoTConnectInit() != ExitCode_Success) {
-        return ExitCode_Init_IoTCTimer;
-    }
-#endif
+// #ifdef USE_IOT_CONNECT
+//     if (IoTConnectInit() != ExitCode_Success) {
+//         return ExitCode_Init_IoTCTimer;
+//     }
+// #endif
 
     // Initialize the i2c sensors
     lp_imu_initialize();
@@ -493,9 +528,14 @@ static ExitCode InitPeripheralsAndHandlers(void)
     }
 
     //// end ADC Connection
-#endif 
+#endif
 
-    return ExitCode_Success;
+    void *connectionContext = Options_GetConnectionContext();
+    return Cloud_Initialize(eventLoop, connectionContext, ExitCodeCallbackHandler,
+                            CloudTelemetryUploadEnabledChangedCallbackHandler,
+                            DisplayAlertCallbackHandler, ConnectionChangedCallbackHandler);
+
+    // return ExitCode_Success;
 }
 
 /// <summary>
@@ -507,19 +547,22 @@ static void ClosePeripheralsAndHandlers(void)
     DisposeEventLoopTimer(sensorPollTimer);
 
 
-#ifdef M4_INTERCORE_COMMS    
+#ifdef M4_INTERCORE_COMMS
     DisposeEventLoopTimer(M4PollTimer);
-#endif 
+#endif
 #ifdef OLED_SD1306
     DisposeEventLoopTimer(oledUpdateTimer);
-#endif 
-#ifdef IOT_HUB_APPLICATION    
-    DisposeEventLoopTimer(azureTimer);
+#endif
+// #ifdef IOT_HUB_APPLICATION
+//     DisposeEventLoopTimer(azureTimer);
+//
+//     // Cleanup andy resources allocated by the direct method handlers
+//     CleanupDirectMethods();
+//
+// #endif // IOT_HUB_APPLICATION
 
-    // Cleanup andy resources allocated by the direct method handlers
-    CleanupDirectMethods();
-
-#endif // IOT_HUB_APPLICATION
+    Cloud_Cleanup();
+    Connection_Cleanup();
 
     EventLoop_Close(eventLoop);
 
@@ -562,9 +605,9 @@ static bool ButtonStateChanged(int fd, GPIO_Value_Type* oldState)
 static void ReadWifiConfig(bool outputDebug)
 {
     char bssid[20];
-#ifdef IOT_HUB_APPLICATION        
-    static bool ssidChanged = false;
-#endif     
+// #ifdef IOT_HUB_APPLICATION
+//     static bool ssidChanged = false;
+// #endif
 
     WifiConfig_ConnectedNetwork network;
     int result = WifiConfig_GetCurrentNetwork(&network);
@@ -587,28 +630,28 @@ static void ReadWifiConfig(bool outputDebug)
         // Check to see if the SSID changed, if so update the SSID and send updated device twins properties
         if (strncmp(network_data.SSID, (char*)&network.ssid, network.ssidLength) != 0)
         {
-#ifdef IOT_HUB_APPLICATION    
-            // Set the flag to send ssid changes to the IoTHub
-            ssidChanged = true;
-#endif             
+// #ifdef IOT_HUB_APPLICATION
+//             // Set the flag to send ssid changes to the IoTHub
+//             ssidChanged = true;
+// #endif
 
             // Clear the ssid array
             memset(network_data.SSID, 0, WIFICONFIG_SSID_MAX_LENGTH);
             strncpy(network_data.SSID, network.ssid, network.ssidLength);
         }
 
-#ifdef IOT_HUB_APPLICATION
-        if ((iothubClientHandle != NULL) && (ssidChanged)) {
-            // Note that we send up this data to Azure if it changes, but the IoT Central Properties elements only 
-            // show the data that was currenet when the device first connected to Azure.
-            checkAndUpdateDeviceTwin("ssid", &network_data.SSID, TYPE_STRING, false);
-            checkAndUpdateDeviceTwin("freq", &network_data.frequency_MHz, TYPE_INT, false);
-            checkAndUpdateDeviceTwin("bssid", &bssid, TYPE_STRING, false);
-
-            // Reset the flag 
-            ssidChanged = false;
-        }
-#endif
+// #ifdef IOT_HUB_APPLICATION
+//         if ((iothubClientHandle != NULL) && (ssidChanged)) {
+//             // Note that we send up this data to Azure if it changes, but the IoT Central Properties elements only
+//             // show the data that was currenet when the device first connected to Azure.
+//             checkAndUpdateDeviceTwin("ssid", &network_data.SSID, TYPE_STRING, false);
+//             checkAndUpdateDeviceTwin("freq", &network_data.frequency_MHz, TYPE_INT, false);
+//             checkAndUpdateDeviceTwin("bssid", &bssid, TYPE_STRING, false);
+//
+//             // Reset the flag
+//             ssidChanged = false;
+//         }
+// #endif
 
         if (outputDebug) {
             Log_Debug("SSID: %s\n", network_data.SSID);
@@ -617,6 +660,51 @@ static void ReadWifiConfig(bool outputDebug)
             Log_Debug("rssi: %d\n", network_data.rssi);
         }
     }
+}
+
+static void ExitCodeCallbackHandler(ExitCode ec)
+{
+    exitCode = ec;
+}
+
+static const char *CloudResultToString(Cloud_Result result)
+{
+    switch (result) {
+    case Cloud_Result_OK:
+        return "OK";
+    case Cloud_Result_NoNetwork:
+        return "No network connection available";
+    case Cloud_Result_OtherFailure:
+        return "Other failure";
+    }
+
+    return "Unknown Cloud_Result";
+}
+
+static void ConnectionChangedCallbackHandler(bool connected)
+{
+    isConnected = connected;
+
+    if (isConnected) {
+        Cloud_Result result = Cloud_SendDeviceDetails(serialNumber);
+        if (result != Cloud_Result_OK) {
+            Log_Debug("WARNING: Could not send device details to cloud: %s\n",
+                      CloudResultToString(result));
+        }
+    }
+}
+
+static void CloudTelemetryUploadEnabledChangedCallbackHandler(bool uploadEnabled)
+{
+    Log_Debug("INFO: Thermometer telemetry upload enabled state changed (via cloud): %s\n",
+              uploadEnabled ? "enabled" : "disabled");
+    // SetThermometerTelemetryUploadEnabled(uploadEnabled);
+    // TODO: add enabling and disabling telemetry upload
+}
+
+static void DisplayAlertCallbackHandler(const char *alertMessage)
+{
+    Log_Debug("ALERT: %s\n", alertMessage);
 }
 
 int main(void)

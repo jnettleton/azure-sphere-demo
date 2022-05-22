@@ -9,7 +9,7 @@
 //#warning "Building for IoT Hub or IoT Central Application"
 #else
 //#warning "Building application for no cloud connectivity"
-#endif 
+#endif
 
 
 // Define if you want to build the Azure IoT Hub/IoTCentral Plug and Play application functionality
@@ -18,8 +18,8 @@
 // Make sure we're using the IOT Hub code for the PNP configuration
 #ifdef USE_PNP
 #define IOT_HUB_APPLICATION
-#define IOT_PLUG_AND_PLAY_MODEL_ID "dtmi:avnet:mt3620Starterkit;1" // https://docs.microsoft.com/en-us/azure/iot-pnp/overview-iot-plug-and-play 
-#endif 
+#define IOT_PLUG_AND_PLAY_MODEL_ID "dtmi:avnet:mt3620Starterkit;1" // https://docs.microsoft.com/en-us/azure/iot-pnp/overview-iot-plug-and-play
+#endif
 
 // Define to build for Avnet's IoT Connect platform
 //#define USE_IOT_CONNECT
@@ -27,10 +27,10 @@
 // If this is a IoT Connect build, make sure to enable the IOT Hub application code
 #ifdef USE_IOT_CONNECT
 #define IOT_HUB_APPLICATION
-#endif 
+#endif
 
 // Include SD1306 OLED code
-// To use the OLED 
+// To use the OLED
 // Install a 128x64 OLED display onto the unpopulated J7 Display connector
 // https://www.amazon.com/gp/product/B06XRCQZRX/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1
 // Enable the OLED_SD1306 #define below
@@ -56,7 +56,7 @@
 #define M4_READ_PERIOD_NANO_SECONDS 0 * 1000
 
 // Defines how quickly the accelerator data is read and reported
-#define SENSOR_READ_PERIOD_SECONDS 5
+#define SENSOR_READ_PERIOD_SECONDS 15
 #define SENSOR_READ_PERIOD_NANO_SECONDS 0 * 1000
 
 // Define how long after processing the haltApplication direct method before the application exits
@@ -64,4 +64,4 @@
 
 // Enables I2C read/write debug
 //#define ENABLE_READ_WRITE_DEBUG
-#endif 
+#endif

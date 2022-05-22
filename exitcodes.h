@@ -22,19 +22,23 @@ typedef enum {
     ExitCode_AzureIoTConnectionTimer_Consume,
 
     ExitCode_Init_EventLoop,
+    ExitCode_Init_Button,
     ExitCode_Init_ButtonA,
     ExitCode_Init_ButtonB,
     ExitCode_Init_ButtonPollTimer,
+    ExitCode_Init_AzureIoTConnectionTimer,
     ExitCode_Init_AzureTimer,
     ExitCode_Init_Led,
 
-	ExitCode_IsButtonPressed_GetValue,
+	  ExitCode_IsButtonPressed_GetValue,
 
     ExitCode_Validate_ConnectionType,
     ExitCode_Validate_ScopeId,
     ExitCode_Validate_Hostname,
     ExitCode_Validate_IoTEdgeCAPath,
+
     ExitCode_InterfaceConnectionStatus_Failed,
+    ExitCode_IsNetworkingReady_Failed,
 
     ExitCode_IoTEdgeRootCa_Open_Failed,
     ExitCode_IoTEdgeRootCa_LSeek_Failed,
@@ -77,7 +81,7 @@ typedef enum {
     ExitCode_ReadFile_OpenMutableFile,
     ExitCode_ReadFile_Read,
     ExitCode_SendTelemetryMemoryError,
-    
+
     // M4 intercore comms exit codes
     ExitCode_Init_RegisterIo,
     ExitCode_Init_Rt_PollTimer,
