@@ -707,7 +707,7 @@ static void DisplayAlertCallbackHandler(const char *alertMessage)
     Log_Debug("ALERT: %s\n", alertMessage);
 }
 
-int main(void)
+int main(int argc, char* argv[])
 {
     Log_Debug("\nVisit https://github.com/Azure/azure-sphere-samples for extensible samples to use as a starting point for full applications.\n");
 
@@ -751,6 +751,11 @@ int main(void)
     bool isNetworkingReady = false;
     if ((Networking_IsNetworkingReady(&isNetworkingReady) == -1) || !isNetworkingReady) {
         Log_Debug("WARNING: Network is not ready. Device cannot connect until network is ready.\n");
+    }
+
+    exitCode = Options_ParseArgs(argc, argv);
+    if (exitCode != ExitCode_Success) {
+        return exitCode;
     }
 
     exitCode = InitPeripheralsAndHandlers();

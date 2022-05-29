@@ -3,7 +3,7 @@
   "Name": "AzureSphereDemo",
   "ComponentId": "1bdc180f-f2ab-47c3-a51b-5d7d3056aee2",
   "EntryPoint": "/bin/app",
-  "CmdArgs": [ "0ne006204EF" ],
+  "CmdArgs": [ "--Hostname", "ncc-iot-hub.azure-devices.net" ],
   "Capabilities": {
     "Gpio": [
       "$SAMPLE_RGBLED_RED",
