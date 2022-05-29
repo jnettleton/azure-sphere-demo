@@ -3,7 +3,7 @@
   "Name": "AzureSphereDemo",
   "ComponentId": "1bdc180f-f2ab-47c3-a51b-5d7d3056aee2",
   "EntryPoint": "/bin/app",
-  "CmdArgs": [],
+  "CmdArgs": [ "0ne006204EF" ],
   "Capabilities": {
     "Gpio": [
       "$SAMPLE_RGBLED_RED",
@@ -16,7 +16,8 @@
     "Uart": [ "$SAMPLE_CLICK1_UART" ],
     //"WifiConfig": false,
     "AllowedApplicationConnections": [],
-    "AllowedConnections": ["global.azure-devices-provisioning.net"]
+    "AllowedConnections": [ "global.azure-devices-provisioning.net", "ncc-iot-hub.azure-devices.net" ],
+    "DeviceAuthentication": "af386c5b-25ff-46cb-bf4f-ba45944a97b2"
   },
   "ApplicationType": "Default"
 }
